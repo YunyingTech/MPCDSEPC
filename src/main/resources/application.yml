@@ -4,7 +4,7 @@ server:
 
 # mybatis 配置
 mybatis:
-  type-aliases-package: com.yytech.entity
+  type-aliases-package: com.yytech.MPCDSEPC.entity
   mapper-locations: classpath:mapper/*.xml
   configuration:
     use-generated-keys: true
@@ -32,7 +32,7 @@ spring:
 
   # 数据库配置
   datasource:
-    username: root
-    password: 123456
-    url: jdbc:mysql://localhost:3306/mpcdsepc
+    username: MPCDSEPC
+    password: bCHzbS2DTxxXm8Ni
+    url: jdbc:mysql://xayytech.com:3306/mpcdsepc
     driver-class-name: com.mysql.cj.jdbc.Driver
