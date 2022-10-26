@@ -1,4 +1,4 @@
-package com.yytech.MPCDSEPC.controller.api.account;/**
+package com.yytech.MPCDSEPC.Controller.api.account;/**
  * @Author: Lettle
  * @Create: 2022-10-26 22:46
  * @Description: api for account
@@ -48,4 +48,9 @@ public class ApiAccountController {
         return  account;
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/signup" ,method = RequestMethod.POST)
+    public String signup(){
+        return "";
+    }
 }
