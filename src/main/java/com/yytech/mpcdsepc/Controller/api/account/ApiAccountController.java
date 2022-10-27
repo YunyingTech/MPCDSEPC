@@ -16,7 +16,7 @@ import java.util.Objects;
  * Create by 2022/10/26 22:46
  */
 @Controller
-@RequestMapping("/MPCDSEPC/api/account")
+@RequestMapping("/mpcdsepc/api/account")
 public class ApiAccountController {
 
     @Resource
