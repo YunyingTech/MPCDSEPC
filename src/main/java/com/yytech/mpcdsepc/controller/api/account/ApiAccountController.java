@@ -34,10 +34,16 @@ public class ApiAccountController {
         return accountService.accountLogin(userName, passWord);
     }
 
+    /**
+     * /mpcdsepc/api/account/select
+     * 根据 id Name Username TeleNum的顺序 只按照一个靠前的信息精准搜索一个用户
+     * @param account passed by browser.
+     * @return All accounts.
+     */
     @ResponseBody
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     public Account select(Account account) {
-        System.out.println("select!!");
+        System.out.println("select!!");     // TODO: After debug, then delete it.
         Account res;
         if (account.getId() != 0) {
             res = accountService.getAccountById(account.getId());
@@ -51,10 +57,27 @@ public class ApiAccountController {
         return res;
     }
 
+    /**
+     * /mpcdsepc/api/account/queryAll
+     * 获取所有的用户信息
+     * TODO: 这里需要识别合法token
+     * @return
+     */
     @ResponseBody
-    @RequestMapping(value = "/queryAll", method = RequestMethod.POST)
+    @RequestMapping(value = "/queryAll", method = RequestMethod.GET)
     public List<Account> queryAllUser() {
         return accountService.getAllAccount();
+    }
+
+    /**
+     * TODO: 这里需要识别合法token
+     * @param account passed by browser.
+     */
+    @ResponseBody
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public void update(Account account) {
+        System.out.println("update!!!");    // TODO: After debug, then delete it.
+        accountService.updateAccount(account);
     }
 
     @ResponseBody

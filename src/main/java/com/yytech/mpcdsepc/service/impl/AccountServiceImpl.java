@@ -94,7 +94,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void updateAccount(Account account) {
-
+        accountMapper.updateAccount(account);
     }
 
     @Override

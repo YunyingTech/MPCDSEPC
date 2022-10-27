@@ -58,7 +58,7 @@
     <!--  用户信息修改  -->
     <update id="updateAccount" parameterType="Account">
         update mpcdsepc.accounts
-        set passWord = #{passWord}, role = #{role}, gentle = #{gentle}, teleNum = #{teleNum}
+        set passWord = #{passWord}, name = #{name}, role = #{role}, gentle = #{gentle}, teleNum = #{teleNum}, isOnline = #{isOnline}
         where id = #{id}
     </update>
     <!--  删除用户  -->
