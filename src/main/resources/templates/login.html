@@ -29,40 +29,34 @@
             document.getElementById("input_username").value = "";
             document.getElementById("input_name").value = "";
             document.getElementById("input_teleNum").value = "";
+
+            document.getElementById("userid").innerHTML = "";
+            document.getElementById("userName").innerHTML = "";
+            document.getElementById("name").innerHTML = "";
+            document.getElementById("teleNum").innerHTML = "";
         }
 
         function sub() {
-            var id = document.getElementById("input_id").value;
+            var id = document.getElementById("input_id").value; if(id==='') id=0;
             var username = document.getElementById("input_username").value;
             var name = document.getElementById("input_name").value;
             var telenum = document.getElementById("input_teleNum").value;
-            if(id===undefined) {
-                id = "";
-            }if(username===undefined) {
-                username = "";
-            }if(name === undefined) {
-                name = "";
-            }if(telenum === undefined) {
-                telenum = "";
-            }
 
             sdata = {
                 "id" : id,
                 "userName": username,
-                "name": name,
-                "teleNum": telenum
+                "role": "","gentle":0,"passWord":"",
+                "name": name,"createDate":new Date(),
+                "teleNum": telenum, "isOnline":0
             };
-
-            console.log(id);
-            console.log(sdata);
 
             $.ajax({
                 type: "post",
                 dataType: "json",
                 url: '/MPCDSEPC/api/account/select',
                 data:sdata,
+                 "Content-Type":"application/json",
                 success: function (result) {
-                    console.log(result);
                     document.getElementById("userid").innerHTML = result.id;
                     document.getElementById("userName").innerHTML = result.userName;
                     document.getElementById("name").innerHTML = result.name;

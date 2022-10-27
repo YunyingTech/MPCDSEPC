@@ -7,10 +7,7 @@ package com.yytech.MPCDSEPC.Controller.api.account;/**
 import com.yytech.MPCDSEPC.entity.Account;
 import com.yytech.MPCDSEPC.service.impl.AccountServiceImpl;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -33,19 +30,19 @@ public class ApiAccountController {
 
     @ResponseBody
     @RequestMapping(value = "/select", method = RequestMethod.POST)
-    public Account select (@RequestParam("id") int userId, @RequestParam("userName") String userName, @RequestParam("name") String name, @RequestParam("teleNum")String teleNum) {
+    public Account select (Account account) {
         System.out.println("select!!");
-        Account account;
-        if(!Objects.equals(userId, "")) {
-            account = accountService.getAccountById(userId);
-        } else if(!Objects.equals(name, "")) {
-            account = accountService.getAccountByName(name);
-        } else if (!Objects.equals(userName, "")) {
-            account = accountService.getAccountByUserName(userName);
+        Account res;
+        if(account.getId() != 0) {
+            res = accountService.getAccountById(account.getId());
+        } else if(!Objects.equals(account.getName(), "")) {
+            res = accountService.getAccountByName(account.getName());
+        } else if (!Objects.equals(account.getUserName(), "")) {
+            res = accountService.getAccountByUserName(account.getUserName());
         } else {
-            account = accountService.getAccountByTeleNum(teleNum);
+            res = accountService.getAccountByTeleNum(account.getTeleNum());
         }
-        return  account;
+        return  res;
     }
 
     @ResponseBody
