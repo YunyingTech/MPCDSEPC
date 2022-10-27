@@ -1,8 +1,8 @@
-package com.yytech.MPCDSEPC.service.impl;
+package com.yytech.mpcdsepc.service.impl;
 
-import com.yytech.MPCDSEPC.entity.Account;
-import com.yytech.MPCDSEPC.mapper.AccountMapper;
-import com.yytech.MPCDSEPC.service.AccountService;
+import com.yytech.mpcdsepc.entity.Account;
+import com.yytech.mpcdsepc.mapper.AccountMapper;
+import com.yytech.mpcdsepc.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

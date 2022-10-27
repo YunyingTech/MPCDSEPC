@@ -1,4 +1,4 @@
-package com.yytech.MPCDSEPC.entity;
+package com.yytech.mpcdsepc.entity;
 
 import lombok.Data;
 import lombok.Getter;

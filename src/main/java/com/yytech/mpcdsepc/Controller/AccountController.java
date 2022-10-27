@@ -1,10 +1,7 @@
-package com.yytech.MPCDSEPC.Controller;
+package com.yytech.mpcdsepc.Controller;
 
-import com.yytech.MPCDSEPC.service.impl.AccountServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 
 @Controller
 @RequestMapping("/MPCDSEPC")

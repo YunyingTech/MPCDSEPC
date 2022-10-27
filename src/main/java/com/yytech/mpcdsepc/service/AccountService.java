@@ -1,6 +1,6 @@
-package com.yytech.MPCDSEPC.service;
+package com.yytech.mpcdsepc.service;
 
-import com.yytech.MPCDSEPC.entity.Account;
+import com.yytech.mpcdsepc.entity.Account;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yytech.MPCDSEPC.mapper.AccountMapper">
+<mapper namespace="com.yytech.mpcdsepc.mapper.AccountMapper">
     <!--  映射表  -->
     <resultMap id="AccountEntity" type="Account">
         <!--  column 数据库中字段名 property 实体类中属性  -->

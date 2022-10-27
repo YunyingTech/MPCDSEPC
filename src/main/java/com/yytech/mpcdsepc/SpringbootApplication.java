@@ -1,4 +1,4 @@
-package com.yytech.MPCDSEPC;
+package com.yytech.mpcdsepc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

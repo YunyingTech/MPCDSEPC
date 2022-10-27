@@ -1,6 +1,6 @@
-package com.yytech.MPCDSEPC.mapper;
+package com.yytech.mpcdsepc.mapper;
 
-import com.yytech.MPCDSEPC.entity.Account;
+import com.yytech.mpcdsepc.entity.Account;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
