@@ -59,7 +59,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<Account> getAllAccount() {
-        return null;
+        return accountMapper.getAllAccount();
     }
 
     @Override
