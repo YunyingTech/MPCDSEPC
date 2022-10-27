@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/mpcdsepc")
 public class AccountController {
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "",method = RequestMethod.GET)
     public String login(){
         return "login";
     }

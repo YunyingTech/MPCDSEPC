@@ -4,10 +4,16 @@ package com.yytech.mpcdsepc.controller.api.account;
  * @Create: 2022-10-26 22:46
  * @Description: api for account
  **/
+
+import com.alibaba.fastjson.JSONObject;
 import com.yytech.mpcdsepc.entity.Account;
 import com.yytech.mpcdsepc.service.impl.AccountServiceImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.Objects;
 
@@ -23,30 +29,34 @@ public class ApiAccountController {
     private AccountServiceImpl accountService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Account login (@RequestParam("username") String userName, @RequestParam("mm") String passWord) {
+    public Account login(@RequestParam("username") String userName, @RequestParam("mm") String passWord) {
         return accountService.accountLogin(userName, passWord);
     }
 
     @ResponseBody
     @RequestMapping(value = "/select", method = RequestMethod.POST)
-    public Account select (Account account) {
+    public Account select(Account account) {
         System.out.println("select!!");
         Account res;
-        if(account.getId() != 0) {
+        if (account.getId() != 0) {
             res = accountService.getAccountById(account.getId());
-        } else if(!Objects.equals(account.getName(), "")) {
+        } else if (!Objects.equals(account.getName(), "")) {
             res = accountService.getAccountByName(account.getName());
         } else if (!Objects.equals(account.getUserName(), "")) {
             res = accountService.getAccountByUserName(account.getUserName());
         } else {
             res = accountService.getAccountByTeleNum(account.getTeleNum());
         }
-        return  res;
+        return res;
     }
 
     @ResponseBody
-    @RequestMapping(value = "/signup" ,method = RequestMethod.POST)
-    public String signup(){
-        return "";
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public String signup(@RequestBody JSONObject jsonObject) {
+        Account res = new Account();
+        accountService.insertAccount(res);
+        return "";//TODO 补全
     }
+
+
 }
