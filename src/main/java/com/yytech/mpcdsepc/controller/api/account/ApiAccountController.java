@@ -1,4 +1,4 @@
-package com.yytech.mpcdsepc.Controller.api.account;
+package com.yytech.mpcdsepc.controller.api.account;
 /**
  * @Author: Lettle
  * @Create: 2022-10-26 22:46

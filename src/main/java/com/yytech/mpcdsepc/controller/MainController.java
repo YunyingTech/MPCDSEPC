@@ -1,4 +1,4 @@
-package com.yytech.mpcdsepc.Controller;
+package com.yytech.mpcdsepc.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
