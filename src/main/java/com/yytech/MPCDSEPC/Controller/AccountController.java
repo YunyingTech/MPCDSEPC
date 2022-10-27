@@ -1,4 +1,4 @@
-package com.yytech.MPCDSEPC.controller;
+package com.yytech.MPCDSEPC.Controller;
 
 import com.yytech.MPCDSEPC.service.impl.AccountServiceImpl;
 import org.springframework.stereotype.Controller;

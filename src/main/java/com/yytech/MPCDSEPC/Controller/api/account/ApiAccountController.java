@@ -1,14 +1,13 @@
-package com.yytech.MPCDSEPC.Controller.api.account;/**
+package com.yytech.MPCDSEPC.Controller.api.account;
+/**
  * @Author: Lettle
  * @Create: 2022-10-26 22:46
  * @Description: api for account
  **/
-
 import com.yytech.MPCDSEPC.entity.Account;
 import com.yytech.MPCDSEPC.service.impl.AccountServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.Objects;
 
