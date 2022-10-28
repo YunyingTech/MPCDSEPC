@@ -88,5 +88,11 @@ public class ApiAccountController {
         return "";//TODO 补全
     }
 
-
+    @ResponseBody
+    @RequestMapping(value = "/logout",
+            produces = {"application/json"},
+            method = RequestMethod.POST)
+    public String logout() {
+        return "";
+    }
 }
