@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yytech.mpcdsepc.mapper.PersonMapper">
+    <!--  映射表  -->
+    <resultMap id="PersonEntity" type="Person">
+        <!--  column 数据库中字段名 property 实体类中属性  -->
+        <id column="ID" property="ID"/>
+        <result column="name" property="name"/>
+        <result column="phoneNum" property="phoneNum"/>
+        <result column="country" property="country"/>
+        <result column="address" property="address"/>
+        <result column="job" property="job"/>
+        <result column="comeFrom" property="comeFrom"/>
+        <result column="highRiskArea" property="highRiskArea"/>
+        <result column="vaccine" property="vaccine"/>
+        <result column="infect" property="infect"/>
+        <result column="samplingPoint" property="samplingPoint"/>
+        <result column="samplingDate" property="samplingDate"/>
+        <result column="isFinished" property="isFinished"/>
+        <result column="accountId" property="accountId"/>
+        <result column="tubeId" property="tubeId"/>
+    </resultMap>
+
+    <!--  根据 身份证号 获取用户  -->
+    <select id="getPersonById" resultType="Person">
+        select * from mpcdsepc.persons
+        where binary ID = #{ID}
+    </select>
+    <!--  根据 name 获取用户  -->
+    <select id="getPersonByName" resultType="Person">
+        select * from mpcdsepc.persons
+        where binary name = #{name}
+    </select>
+    <!--  根据 TubeId 获取用户  -->
+    <select id="getPersonByTubeId" resultType="Person">
+        select * from mpcdsepc.persons
+        where binary tubeId = #{tubeId}
+    </select>
+    <!--  根据 AccountId 获取用户  -->
+    <select id="getPersonByAccountId" resultType="Person">
+        select * from mpcdsepc.persons
+        where binary accountId = #{accountId}
+    </select>
+    <!--  插入用户  -->
+    <insert id="insertPerson" parameterType="Person">
+        insert into mpcdsepc.persons (ID,name,phoneNum,country,address,job,comeFrom,highRiskArea,vaccine,infect,samplingPoint,samplingDate,isFinished,accountId,tubeId)
+        values (#{ID},#{name},#{phoneNum},#{country},#{address},#{job},#{comeFrom},#{highRiskArea},#{vaccine},#{infect},#{samplingPoint},#{samplingDate},#{isFinished},#{accountId},#{tubeId});
+    </insert>
+
+    <!--  用户信息修改  -->
+    <update id="updatePerson" parameterType="Person">
+        update mpcdsepc.persons
+        set ID = #{ID}, name = #{name}, phoneNum = #{phoneNum}, country = #{country}, address = #{address}, job = #{job}, comeFrom = #{comeFrom}, highRiskArea = #{highRiskArea}, vaccine = #{vaccine}, infect = #{infect}, samplingPoint = #{samplingPoint},samplingDate = #{samplingDate},isFinished = #{isFinished},accountId = #{accountId},tubeId = #{tubeId}
+            where id = #{id}
+    </update>
+    <!--  删除用户  -->
+    <delete id="deletePersonById" parameterType="int">
+        delete from mpcdsepc.persons where ID = #{ID}
+    </delete>
+</mapper>

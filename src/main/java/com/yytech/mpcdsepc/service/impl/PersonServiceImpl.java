@@ -9,11 +9,13 @@ import com.yytech.mpcdsepc.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 @Slf4j
 public class PersonServiceImpl implements PersonService {
+    @Resource
     public PersonMapper mapper;
 
     @Override
@@ -22,8 +24,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person getPersonById(int id) {
-        return mapper.getPersonById(id);
+    public Person getPersonById(String ID) {
+        return mapper.getPersonById(ID);
     }
 
     @Override
@@ -38,15 +40,16 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void insertPerson(Person person) {
+        mapper.insertPerson(person);
     }
 
     @Override
     public void updatePerson(Person person) {
-
+        mapper.updatePerson(person);
     }
 
     @Override
     public void deletePersonById(int id) {
-
+        mapper.deletePersonById(id);
     }
 }

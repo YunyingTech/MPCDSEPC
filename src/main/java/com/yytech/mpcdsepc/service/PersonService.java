@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public interface PersonService {
     List<Person> getPersonByName(String name);
-    Person getPersonById(int id);
+    Person getPersonById(String ID);
     List<Person> getPersonByTubeId(int id);
     List<Person> getPersonByAccountId(int id);
 
