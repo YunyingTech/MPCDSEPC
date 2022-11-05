@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -39,17 +40,32 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void insertPerson(Person person) {
-        mapper.insertPerson(person);
+    public boolean insertPerson(Person person) {
+        try {
+            mapper.insertPerson(person);
+        } catch(Exception e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public void updatePerson(Person person) {
-        mapper.updatePerson(person);
+    public boolean updatePerson(Person person) {
+        try {
+            mapper.updatePerson(person);
+        } catch(Exception e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public void deletePersonById(int id) {
-        mapper.deletePersonById(id);
+    public boolean deletePersonById(int id) {
+        try {
+            mapper.deletePersonById(id);
+        } catch(Exception e) {
+            return false;
+        }
+        return true;
     }
 }

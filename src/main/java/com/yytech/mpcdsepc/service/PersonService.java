@@ -15,7 +15,7 @@ public interface PersonService {
     List<Person> getPersonByTubeId(int id);
     List<Person> getPersonByAccountId(int id);
 
-    void insertPerson(Person person);
-    void updatePerson(Person person);
-    void deletePersonById(int id);
+    boolean insertPerson(Person person);
+    boolean updatePerson(Person person);
+    boolean deletePersonById(int id);
 }

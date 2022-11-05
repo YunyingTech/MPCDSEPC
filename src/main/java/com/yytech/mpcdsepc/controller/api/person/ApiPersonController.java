@@ -7,13 +7,12 @@ package com.yytech.mpcdsepc.controller.api.person;/**
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.service.PersonService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lettle
@@ -51,20 +50,41 @@ public class ApiPersonController {
 
     @ResponseBody
     @RequestMapping(value = "/insertPerson", method = RequestMethod.POST)
-    public void insertPerson(@RequestParam Person person) {
-        personService.insertPerson(person);
+    public Map<String, String> insertPerson(@RequestBody Person person) {
+        if(personService.insertPerson(person)) {
+            return null;
+        } else {
+            Map<String, String> ret = new HashMap<>();
+            ret.put("msg","ID重复");
+            ret.put("code","400");
+            return ret;
+        }
     }
 
     @ResponseBody
     @RequestMapping(value = "/updatePerson", method = RequestMethod.PUT)
-    public void updatePerson(@RequestParam Person person) {
-        personService.updatePerson(person);
+    public Map<String, String> updatePerson(@RequestParam Person person) {
+        if(personService.updatePerson(person)) {
+            return null;
+        } else {
+            Map<String, String> ret = new HashMap<>();
+            ret.put("msg","update failed");
+            ret.put("code","400");
+            return ret;
+        }
     }
 
     @ResponseBody
     @RequestMapping(value = "/deletePersonById", method = RequestMethod.DELETE)
-    public void deletePersonById(@RequestParam int id) {
-        personService.deletePersonById(id);
+    public Map<String, String> deletePersonById(@RequestParam int id) {
+        if(personService.deletePersonById(id)) {
+            return null;
+        } else {
+            Map<String, String> ret = new HashMap<>();
+            ret.put("msg","delete failed");
+            ret.put("code","400");
+            return ret;
+        }
     }
 
 
