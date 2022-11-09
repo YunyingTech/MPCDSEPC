@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yytech.mpcdsepc.mapper.TubeMapper">
+    <!--  select  -->
+    <select id="getAllTubes" resultType="list">
+        select * from mpcdsepc.tubes
+    </select>
+    <select id="getTubeCreatorIDByID" resultType="int">
+        select creatorId from mpcdsepc.tubes where id = #{tubes}
+    </select>
+
+</mapper>

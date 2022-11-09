@@ -17,16 +17,16 @@
     </resultMap>
 
     <!--  获取所有用户  -->
-    <select id="getAllAccount" resultType="Account">
+    <select id="getAllAccount" resultType="list">
         select * from mpcdsepc.accounts
     </select>
-    <select id="getAccountByRole" resultType="Account">
+    <select id="getAccountByRole" resultType="list">
         select * from mpcdsepc.accounts where role = #{role}
     </select>
-    <select id="getAccountBySex" resultType="Account">
+    <select id="getAccountBySex" resultType="list">
         select * from mpcdsepc.accounts where isGentle = #{isGentle}
     </select>
-    <select id="getAccountByIsOnline" resultType="Account">
+    <select id="getAccountByIsOnline" resultType="list">
         select * from mpcdsepc.accounts where isOnline = #{isOnline}
     </select>
 
@@ -65,4 +65,8 @@
     <delete id="deleteAccount" parameterType="int">
         delete from mpcdsepc.accounts where id = #{id}
     </delete>
+<!--    插入用户-->
+    <insert id="insertAccount" parameterType="Account">
+        insert into mpcdsepc.accounts values (#{id}, #{userName}, #{role}, #{gentle}, #{passWord}, #{name}, #{createDate}, #{telNum}, #{isOnline});
+    </insert>
 </mapper>
