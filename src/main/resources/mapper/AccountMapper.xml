@@ -17,16 +17,16 @@
     </resultMap>
 
     <!--  获取所有用户  -->
-    <select id="getAllAccount" resultType="list">
+    <select id="getAllAccount" resultType="Account">
         select * from mpcdsepc.accounts
     </select>
-    <select id="getAccountByRole" resultType="list">
+    <select id="getAccountByRole" resultType="Account">
         select * from mpcdsepc.accounts where role = #{role}
     </select>
-    <select id="getAccountBySex" resultType="list">
+    <select id="getAccountBySex" resultType="Account">
         select * from mpcdsepc.accounts where isGentle = #{isGentle}
     </select>
-    <select id="getAccountByIsOnline" resultType="list">
+    <select id="getAccountByIsOnline" resultType="Account">
         select * from mpcdsepc.accounts where isOnline = #{isOnline}
     </select>
 
