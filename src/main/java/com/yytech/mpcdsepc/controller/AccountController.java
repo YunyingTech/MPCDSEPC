@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @Controller
 @RequestMapping("/mpcdsepc")
 public class AccountController {
@@ -12,12 +14,6 @@ public class AccountController {
     public String login(){
         return "login";
     }
-
-    @ResponseBody
-    @RequestMapping(value = "/api/account/login",method = RequestMethod.POST,produces = "application/json")
-    public JSONObject loginPOST(HttpRequestHandler httpRequestHandler){
-        JSONObject ret = new JSONObject();
-        return ret;
-    }
+    
 
 }

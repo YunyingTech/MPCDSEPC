@@ -97,6 +97,7 @@ public class ApiAccountController {
             produces = {"application/json"},
             method = RequestMethod.POST)
     public String logout() {
-        return "";
+        System.out.println("Log out!");
+        return "Logout Success";
     }
 }
