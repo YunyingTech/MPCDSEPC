@@ -104,6 +104,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account accountLogin(String userName, String passWord) {
-        return null;
+        Account a = new Account();
+        a.setUserName(userName);
+        a.setPassWord(passWord);
+        return a;
     }
 }

@@ -13,6 +13,8 @@ public class MainController {
 
     /*根目录跳转至微服务mpcdsepc
     * */
+
+    //TODO: 集成 cloud 时注意修改
     @RequestMapping(value = "")
     public RedirectView redirectToApp(RedirectAttributes attributes){
         attributes.addFlashAttribute("flashAttribute","redirectToApp");

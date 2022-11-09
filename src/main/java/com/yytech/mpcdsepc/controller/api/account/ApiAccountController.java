@@ -6,6 +6,7 @@ package com.yytech.mpcdsepc.controller.api.account;
  **/
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.yytech.mpcdsepc.entity.Account;
 import com.yytech.mpcdsepc.service.impl.AccountServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -23,15 +25,17 @@ import java.util.Objects;
  * Create by 2022/10/26 22:46
  */
 @Controller
+@CrossOrigin
 @RequestMapping("/mpcdsepc/api/account")
 public class ApiAccountController {
 
     @Resource
     private AccountServiceImpl accountService;
 
+    @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Account login(@RequestParam("username") String userName, @RequestParam("mm") String passWord) {
-        return accountService.accountLogin(userName, passWord);
+    public Account login(@RequestBody Map<String, String> map) {
+        return accountService.accountLogin(map.get("username"), map.get("mm"));
     }
 
     /**
