@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Author: Lettle
@@ -104,9 +105,18 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account accountLogin(String userName, String passWord) {
-        Account a = new Account();
-        a.setUserName(userName);
-        a.setPassWord(passWord);
-        return a;
+        Account account = getAccountByUserName(userName);
+        //TODO DEV
+        if(account == null){
+            return null;
+        }
+        else{
+            if(Objects.equals(account.getPassWord(), passWord)){
+                return account;
+            }
+            else {
+                return null;
+            }
+        }
     }
 }
