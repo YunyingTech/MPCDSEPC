@@ -10,11 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/mpcdsepc/api/document")
 public class ApiDocumentController {
 
-    @ResponseBody
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     public static String upload(HttpServletRequest httpServletRequest,@RequestParam("filename") String filename){
         try(InputStream inputStream = httpServletRequest.getInputStream()){
@@ -45,7 +44,6 @@ public class ApiDocumentController {
      * @param day   获取单管数据的日 (optional)
      * @return 成功 (status code 200)
      */
-    @ResponseBody
     @RequestMapping(value = "/tubelist",
             produces = {"application/json"},
             method = RequestMethod.POST)
