@@ -30,7 +30,11 @@ public class ApiAccountController {
 
     @PostMapping("login")
     public Result login(@RequestBody Map<String, String> map) {
-        return Result.ok(accountService.accountLogin(map.get("username"), map.get("mm")));
+        Account account = accountService.accountLogin(map.get("username"), map.get("mm"));
+        if(account == null){
+            return Result.fail("账号或密码错误");
+        }
+        return Result.ok(account);
     }
 
     /**
@@ -40,19 +44,19 @@ public class ApiAccountController {
      * @return All accounts.
      */
     @PostMapping("select")
-    public Result select(Account account) {
+    public Result select(@RequestBody Account account) {
         System.out.println("select!!");     // TODO: After debug, then delete it.
-        Account res;
-        if (account.getId() != 0) {
-            res = accountService.getAccountById(account.getId());
-        } else if (!Objects.equals(account.getName(), "")) {
-            res = accountService.getAccountByName(account.getName());
-        } else if (!Objects.equals(account.getUserName(), "")) {
-            res = accountService.getAccountByUserName(account.getUserName());
-        } else {
-            res = accountService.getAccountByTeleNum(account.getTeleNum());
-        }
-        return Result.ok(res);
+//        Account res;
+//        if (account.getId() != 0) {
+//            res = accountService.getAccountById(account.getId());
+//        } else if (!Objects.equals(account.getName(), "")) {
+//            res = accountService.getAccountByName(account.getName());
+//        } else if (!Objects.equals(account.getUserName(), "")) {
+//            res = accountService.getAccountByUserName(account.getUserName());
+//        } else {
+//            res = accountService.getAccountByTeleNum(account.getTeleNum());
+//        }
+        return Result.ok(account.getUserName());
     }
 
     /**
@@ -71,9 +75,10 @@ public class ApiAccountController {
      * @param account passed by browser.
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public void update(Account account) {
+    public Result update(Account account) {
         System.out.println("update!!!");    // TODO: After debug, then delete it.
         accountService.updateAccount(account);
+        return Result.ok();
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
