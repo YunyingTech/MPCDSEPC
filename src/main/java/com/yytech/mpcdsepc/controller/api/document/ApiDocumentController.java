@@ -1,6 +1,8 @@
 package com.yytech.mpcdsepc.controller.api.document;
 
 import com.fasterxml.jackson.databind.util.ClassUtil;
+import com.yytech.mpcdsepc.service.PersonService;
+import com.yytech.mpcdsepc.util.LoadPersonXlsxToDB;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
@@ -49,5 +51,27 @@ public class ApiDocumentController {
             method = RequestMethod.POST)
     public String mpcdsepcDocumentTubelistPost(@CookieValue("token") String token, @RequestParam(value = "year") Integer year, @RequestParam(value = "month") Integer month, @RequestParam(value = "day") Integer day) {
         return "";
+    }
+
+    @Resource
+    LoadPersonXlsxToDB loadPersonXlsxToDB;
+
+    /**
+     * 测试 文件上转解析到数据库
+     * @return
+     * @throws FileNotFoundException
+     */
+    @RequestMapping("/uploadPerson")
+    public String uploadPerson() throws FileNotFoundException {
+        loadPersonXlsxToDB.openXlsxAndProcess(new FileInputStream("E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\person_example.xlsx"));
+
+        return "ok";
+    }
+
+    @RequestMapping("/uploadTube")
+    public String uploadTube() throws FileNotFoundException {
+        loadPersonXlsxToDB.openXlsxAndProcess(new FileInputStream("E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\tube_example.xlsx"));
+
+        return "ok";
     }
 }
