@@ -1,6 +1,5 @@
-package com.yytech.mpcdsepc.util;
+package com.yytech.mpcdsepc.file.xlsxLoad;
 
-import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.entity.Tube;
 import com.yytech.mpcdsepc.service.impl.TubeServiceImpl;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Date;
 
 @Component
 public class LoadTubeXlsxToDB extends LoadXlsxToDB  {

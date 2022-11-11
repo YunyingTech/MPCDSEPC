@@ -1,20 +1,13 @@
-package com.yytech.mpcdsepc.util;
+package com.yytech.mpcdsepc.file.xlsxLoad;
 
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.service.PersonService;
-import com.yytech.mpcdsepc.service.impl.PersonServiceImpl;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ResourceUtils;
 
 import javax.annotation.Resource;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Date;
 
 /**
  * load person到数据库
