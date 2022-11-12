@@ -4,7 +4,6 @@ import com.yytech.mpcdsepc.entity.Tube;
 import com.yytech.mpcdsepc.service.impl.TubeServiceImpl;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,9 +39,4 @@ public class LoadTubeXlsxToDB extends LoadXlsxToDB  {
         return 1;
     }
 
-    @Test
-    void test() throws FileNotFoundException {
-        LoadTubeXlsxToDB loadTubeXlsxToDB = new LoadTubeXlsxToDB();
-        loadTubeXlsxToDB.openXlsxAndProcess(new FileInputStream("E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\tube_example.xlsx"));
-    }
 }
