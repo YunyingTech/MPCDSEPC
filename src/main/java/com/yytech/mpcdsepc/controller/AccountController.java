@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
-@Controller
+@RestController
 @RequestMapping("/mpcdsepc")
 public class AccountController {
-    @RequestMapping(value = "/login",method = RequestMethod.GET)
+    @GetMapping("login")
     public String login(){
         return "login";
     }

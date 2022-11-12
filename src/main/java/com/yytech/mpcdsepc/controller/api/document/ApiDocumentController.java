@@ -1,8 +1,6 @@
 package com.yytech.mpcdsepc.controller.api.document;
 
-import com.fasterxml.jackson.databind.util.ClassUtil;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.ClassUtils;
+import com.yytech.mpcdsepc.file.xlsxLoad.LoadPersonXlsxToDB;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -11,11 +9,10 @@ import java.io.*;
 import java.util.Map;
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/mpcdsepc/api/document")
 public class ApiDocumentController {
 
-    @ResponseBody
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     public static String upload(HttpServletRequest httpServletRequest,@RequestParam("filename") String filename){
         try(InputStream inputStream = httpServletRequest.getInputStream()){
@@ -43,11 +40,32 @@ public class ApiDocumentController {
      * @param token 验证身份 (required)
      * @return 成功 (status code 200)
      */
-    @ResponseBody
     @RequestMapping(value = "/tubelist",
             produces = {"application/json"},
             method = RequestMethod.POST)
     public String mpcdsepcDocumentTubelistPost(@CookieValue("token") String token, @RequestBody Map<String, String> map) {
         return "";
+    }
+
+    @Resource
+    LoadPersonXlsxToDB loadPersonXlsxToDB;
+
+    /**
+     * 测试 文件上转解析到数据库
+     * @return
+     * @throws FileNotFoundException
+     */
+    @RequestMapping("/uploadPerson")
+    public String uploadPerson() throws FileNotFoundException {
+        loadPersonXlsxToDB.openXlsxAndProcess(new FileInputStream("E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\person_example.xlsx"));
+
+        return "ok";
+    }
+
+    @RequestMapping("/uploadTube")
+    public String uploadTube() throws FileNotFoundException {
+        loadPersonXlsxToDB.openXlsxAndProcess(new FileInputStream("E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\tube_example.xlsx"));
+
+        return "ok";
     }
 }
