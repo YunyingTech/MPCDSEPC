@@ -4,7 +4,6 @@ import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.service.PersonService;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -55,8 +54,4 @@ public class LoadPersonXlsxToDB extends LoadXlsxToDB{
         return 1;
     }
 
-    @Test
-    public void test(){
-
-    }
 }
