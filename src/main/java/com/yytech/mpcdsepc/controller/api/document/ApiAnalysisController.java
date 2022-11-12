@@ -1,10 +1,9 @@
-package com.yytech.mpcdsepc.controller.api.document;
-
 /**
  * @Author: Lettle
  * @Create: 2022-11-12 16:28
  * @Description: 分析 excel
  **/
+package com.yytech.mpcdsepc.controller.api.document;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -17,17 +16,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Lettle
- * Create by 2022/11/12 16:28
- */
 
 @RestController
 @RequestMapping("/mpcdsepc/api/document")
 public class ApiAnalysisController {
 
     // 服务器被上传的 excel 存储路径
-    private final static String dir = "./excels/";
+    private final static String dir = "excels/";
 
     @PostMapping("/excelAnalysis")
     public Map<String,Object> excelAnalysis(@RequestBody Map<String,String> req) {
