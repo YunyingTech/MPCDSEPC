@@ -1,10 +1,10 @@
 package com.yytech.mpcdsepc.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yytech.mpcdsepc.entity.Account;
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.entity.Tube;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class LockUtil {
             jsonData.put("accountId", account.getId());
             data.put(String.valueOf(tube.id) + person.ID, jsonData.toString());
             return true;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -48,7 +48,7 @@ public class LockUtil {
             jsonData.put("accountId", accountId);
             data.put(tubeId + personId, jsonData.toString());
             return true;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -59,9 +59,8 @@ public class LockUtil {
      *
      * @param key
      * @return
-     * @throws JSONException
      */
-    public static boolean isLockDataUtil(String key) throws JSONException {
+    public static boolean isLockDataUtil(String key) {
         return data.containsKey(key);
     }
 
@@ -69,9 +68,8 @@ public class LockUtil {
      * 解除锁定
      *
      * @param key
-     * @throws JSONException
      */
-    public static void unLockDataUtil(String key) throws JSONException {
+    public static void unLockDataUtil(String key) {
         data.remove(key);
     }
 }
