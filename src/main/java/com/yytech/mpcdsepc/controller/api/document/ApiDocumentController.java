@@ -53,12 +53,22 @@ public class ApiDocumentController {
         return "ok";
     }
 
+    /**
+     * 删除混管信息
+     * @param id 混管ID
+     * @return
+     */
     @RequestMapping(value = "/delTube",method = RequestMethod.POST,produces = "application/json")
     public String deleteTube(@RequestParam("tubeId") int id){
         tubeService.deleteTube(id);
         return "ok";
     }
 
+    /**
+     * 获取混管信息,如果查询不到返回空Tubes
+     * @param id 混管ID
+     * @return
+     */
     @RequestMapping(value = "/getTubeData",method = RequestMethod.POST,produces = "application/json")
     public String getTubeData(@RequestParam("tubeId") int id){
         Tube tube = tubeService.getTubeById(id);
@@ -80,5 +90,15 @@ public class ApiDocumentController {
             ret.put("tubes",tubes);
             return ret.toJSONString();
         }
+    }
+
+    /**
+     * 获取混管回转次数
+     * @param id 混管ID
+     * @return
+     */
+    @RequestMapping(value = "/getRollbackTimes",method = RequestMethod.POST,produces = "application/json")
+    public int getRollBackTimes(@RequestParam("tubeId") int id){
+        return tubeService.getRollBackTimes(id);
     }
 }
