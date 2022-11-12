@@ -9,4 +9,6 @@ public interface TubeService {
     int deleteTube(int tubeId);
 
     int getRollBackTimes(int tubeId);
+
+    Tube getTubeById(int tubeId);
 }

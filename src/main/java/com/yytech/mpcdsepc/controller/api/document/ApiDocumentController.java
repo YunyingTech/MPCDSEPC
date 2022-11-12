@@ -1,6 +1,9 @@
 package com.yytech.mpcdsepc.controller.api.document;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
+import com.yytech.mpcdsepc.entity.Tube;
 import com.yytech.mpcdsepc.service.TubeService;
 import com.yytech.mpcdsepc.utils.LockUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +61,24 @@ public class ApiDocumentController {
 
     @RequestMapping(value = "/getTubeData",method = RequestMethod.POST,produces = "application/json")
     public String getTubeData(@RequestParam("tubeId") int id){
-        return "ok";
+        Tube tube = tubeService.getTubeById(id);
+        JSONObject ret = new JSONObject();
+        JSONObject tubeData = new JSONObject();
+        JSONArray tubes = new JSONArray();
+        if(tube != null){
+            tubeData.put("tubeId",tube.getId());
+            tubeData.put("createId",tube.getCreatorId());
+            tubeData.put("lastModifierId",tube.getLastModifierId());
+            tubeData.put("rollbackTimes",tube.getRollbackTimes());
+            tubeData.put("createDate",tube.getCreateDate().toString());
+            tubes.add(tubeData);
+            ret.put("tubes",tubes);
+            return ret.toJSONString();
+        }
+        else{
+            tubes.add(tubeData);
+            ret.put("tubes",tubes);
+            return ret.toJSONString();
+        }
     }
 }

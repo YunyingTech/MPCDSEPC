@@ -16,4 +16,7 @@
     <select id="getRollBackTimes" resultType="int">
         select rollbackTimes from mpcdsepc.tubes where id = #{id}
     </select>
+    <select id="getTubeById" resultType="Tube">
+        select * from mpcdsepc.tubes where id = #{id}
+    </select>
 </mapper>

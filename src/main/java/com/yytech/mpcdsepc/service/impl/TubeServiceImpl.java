@@ -24,4 +24,9 @@ public class TubeServiceImpl implements TubeService {
     public int getRollBackTimes(int id){
         return tubeMapper.getRollBackTimes(id);
     }
+
+    @Override
+    public Tube getTubeById(int id){
+        return tubeMapper.getTubeById(id);
+    }
 }

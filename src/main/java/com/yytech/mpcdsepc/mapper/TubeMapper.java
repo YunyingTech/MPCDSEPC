@@ -25,4 +25,6 @@ public interface TubeMapper {
 
     int getRollBackTimes(Integer tubeId);
 
+    Tube getTubeById(Integer tubId);
+
 }
