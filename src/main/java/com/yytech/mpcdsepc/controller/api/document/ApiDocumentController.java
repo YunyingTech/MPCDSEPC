@@ -1,75 +1,23 @@
 package com.yytech.mpcdsepc.controller.api.document;
 
-import com.yytech.mpcdsepc.file.xlsxLoad.LoadPersonXlsxToDB;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
+import com.yytech.mpcdsepc.entity.Tube;
+import com.yytech.mpcdsepc.service.TubeService;
 import com.yytech.mpcdsepc.utils.LockUtil;
-import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
 import java.util.Map;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/mpcdsepc/api/document")
 public class ApiDocumentController {
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public static String upload(HttpServletRequest httpServletRequest, @RequestParam("filename") String filename) {
-        try (InputStream inputStream = httpServletRequest.getInputStream()) {
-            String retFileName = UUID.randomUUID().toString();
-            System.out.println(retFileName);
-            File file = new File("Files\\" + retFileName);
-            if (!file.getParentFile().exists()) {
-                boolean mkdirsSuccess = file.getParentFile().mkdirs();
-            }
-            FileOutputStream fileOutputStream = new FileOutputStream("Files\\" + retFileName, false);
-            fileOutputStream.write(inputStream.readAllBytes());
-            fileOutputStream.close();
-            return inputStream.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    /**
-     * POST /mpcdsepc/document/tubelist : 获取单管数据
-     * 获取单管数据
-     *
-     * @param token 验证身份 (required)
-     * @return 成功 (status code 200)
-     */
-    @RequestMapping(value = "/tubelist",
-            produces = {"application/json"},
-            method = RequestMethod.POST)
-    public String mpcdsepcDocumentTubelistPost(@CookieValue("token") String token, @RequestBody Map<String, String> map) {
-        return "";
-    }
-
-    @Resource
-    LoadPersonXlsxToDB loadPersonXlsxToDB;
-
-    /**
-     * 测试 文件上转解析到数据库
-     *
-     * @return
-     * @throws FileNotFoundException
-     */
-    @RequestMapping("/uploadPerson")
-    public String uploadPerson() throws FileNotFoundException {
-        loadPersonXlsxToDB.openXlsxAndProcess(new FileInputStream("E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\person_example.xlsx"));
-
-        return "ok";
-    }
-
-    @RequestMapping("/uploadTube")
-    public String uploadTube() throws FileNotFoundException {
-        loadPersonXlsxToDB.openXlsxAndProcess(new FileInputStream("E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\tube_example.xlsx"));
-
-        return "ok";
-    }
+    @Autowired
+    private TubeService tubeService;
 
     /**
      * 是否被锁
@@ -103,5 +51,34 @@ public class ApiDocumentController {
     public String unLock(@RequestBody Map<String,String> map) throws JSONException {
         LockUtil.unLockDataUtil(map.get("tubeId") + map.get("personId"));
         return "ok";
+    }
+
+    @RequestMapping(value = "/delTube",method = RequestMethod.POST,produces = "application/json")
+    public String deleteTube(@RequestParam("tubeId") int id){
+        tubeService.deleteTube(id);
+        return "ok";
+    }
+
+    @RequestMapping(value = "/getTubeData",method = RequestMethod.POST,produces = "application/json")
+    public String getTubeData(@RequestParam("tubeId") int id){
+        Tube tube = tubeService.getTubeById(id);
+        JSONObject ret = new JSONObject();
+        JSONObject tubeData = new JSONObject();
+        JSONArray tubes = new JSONArray();
+        if(tube != null){
+            tubeData.put("tubeId",tube.getId());
+            tubeData.put("createId",tube.getCreatorId());
+            tubeData.put("lastModifierId",tube.getLastModifierId());
+            tubeData.put("rollbackTimes",tube.getRollbackTimes());
+            tubeData.put("createDate",tube.getCreateDate().toString());
+            tubes.add(tubeData);
+            ret.put("tubes",tubes);
+            return ret.toJSONString();
+        }
+        else{
+            tubes.add(tubeData);
+            ret.put("tubes",tubes);
+            return ret.toJSONString();
+        }
     }
 }

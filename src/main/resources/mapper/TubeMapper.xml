@@ -10,4 +10,13 @@
     <select id="getTubeCreatorIDByID" resultType="int">
         select creatorId from mpcdsepc.tubes where id = #{tubes}
     </select>
+    <delete id="delTubeByID">
+        delete from mpcdsepc.tubes where id = #{id}
+    </delete>
+    <select id="getRollBackTimes" resultType="int">
+        select rollbackTimes from mpcdsepc.tubes where id = #{id}
+    </select>
+    <select id="getTubeById" resultType="Tube">
+        select * from mpcdsepc.tubes where id = #{id}
+    </select>
 </mapper>

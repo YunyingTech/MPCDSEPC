@@ -17,5 +17,5 @@ public class Tube {
     public Date createDate;
     public int creatorId;
     public int lastModifierId;
-
+    public int rollbackTimes;
 }

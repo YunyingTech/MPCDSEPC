@@ -6,4 +6,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TubeService {
     boolean insertTube(Tube tube);
+    int deleteTube(int tubeId);
+
+    int getRollBackTimes(int tubeId);
+
+    Tube getTubeById(int tubeId);
 }
