@@ -23,4 +23,6 @@ public interface TubeMapper {
 
     int delTubeByID(Integer tubeId);
 
+    int getRollBackTimes(Integer tubeId);
+
 }

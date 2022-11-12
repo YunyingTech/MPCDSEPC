@@ -13,4 +13,7 @@
     <delete id="delTubeByID">
         delete from mpcdsepc.tubes where id = #{id}
     </delete>
+    <select id="getRollBackTimes" resultType="int">
+        select rollbackTimes from mpcdsepc.tubes where id = #{id}
+    </select>
 </mapper>

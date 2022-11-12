@@ -115,4 +115,9 @@ public class ApiDocumentController {
         tubeService.deleteTube(id);
         return "ok";
     }
+
+    @RequestMapping(value = "/getTubeData",method = RequestMethod.POST,produces = "application/json")
+    public String getTubeData(@RequestParam("tubeId") int id){
+        return "ok";
+    }
 }
