@@ -1,8 +1,10 @@
 package com.yytech.mpcdsepc.controller.api.document;
 
+import com.alibaba.fastjson.JSONException;
 import com.yytech.mpcdsepc.file.xlsxLoad.LoadPersonXlsxToDB;
+import com.yytech.mpcdsepc.service.TubeService;
 import com.yytech.mpcdsepc.utils.LockUtil;
-import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,6 +16,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/mpcdsepc/api/document")
 public class ApiDocumentController {
+
+    @Autowired
+    private TubeService tubeService;
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public static String upload(HttpServletRequest httpServletRequest, @RequestParam("filename") String filename) {
@@ -102,6 +107,12 @@ public class ApiDocumentController {
     @RequestMapping(value = "/unLockData", produces = {"application/json"}, method = RequestMethod.POST)
     public String unLock(@RequestBody Map<String,String> map) throws JSONException {
         LockUtil.unLockDataUtil(map.get("tubeId") + map.get("personId"));
+        return "ok";
+    }
+
+    @RequestMapping(value = "/delTube",method = RequestMethod.POST,produces = "application/json")
+    public String deleteTube(@RequestParam("tubeId") int id){
+        tubeService.deleteTube(id);
         return "ok";
     }
 }

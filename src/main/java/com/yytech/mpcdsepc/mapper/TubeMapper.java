@@ -21,6 +21,6 @@ public interface TubeMapper {
 
     int addTube(Tube tube);
 
-    int delTubeByID(Integer id);
+    int delTubeByID(Integer tubeId);
 
 }

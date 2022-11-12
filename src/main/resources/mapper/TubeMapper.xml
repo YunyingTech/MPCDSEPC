@@ -10,4 +10,7 @@
     <select id="getTubeCreatorIDByID" resultType="int">
         select creatorId from mpcdsepc.tubes where id = #{tubes}
     </select>
+    <delete id="delTubeByID">
+        delete from mpcdsepc.tubes where id = #{id}
+    </delete>
 </mapper>
