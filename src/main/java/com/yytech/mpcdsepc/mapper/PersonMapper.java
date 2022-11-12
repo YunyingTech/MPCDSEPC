@@ -14,7 +14,6 @@ public interface PersonMapper {
     Person getPersonById(String ID);
     List<Person> getPersonByTubeId(int id);
     List<Person> getPersonByAccountId(int id);
-
     void insertPerson(Person person);
     void updatePerson(Person person);
     void deletePersonById(int id);
