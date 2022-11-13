@@ -15,6 +15,9 @@ public class Message<T> {
     public static <T> String OnlineCount (int num){
         return JSON.toJSONString(new Message("onlineCount", num));
     }
+    public static <T> String Lock (String id){
+        return JSON.toJSONString(new Message("Lock", id));
+    }
     public static <T> Message info (T data){
         return new Message("info", data);
     }

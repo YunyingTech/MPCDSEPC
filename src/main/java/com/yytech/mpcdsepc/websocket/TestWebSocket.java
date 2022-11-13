@@ -1,5 +1,7 @@
 package com.yytech.mpcdsepc.websocket;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.yytech.mpcdsepc.entity.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,11 +25,16 @@ public class TestWebSocket {
 
     //存着每个用户以及其对应的会话，这个可以用来发送点对点消息
     private static ConcurrentHashMap<String,Session> sessionPool = new ConcurrentHashMap<String,Session>();
+    private static ConcurrentHashMap<String,String> EditDocumentMap = new ConcurrentHashMap<String,String>();
 
     @OnOpen
     public void onOpen(Session session, @PathParam(value="id")String userId) {
         try {
             this.session = session;
+            if (sessionPool.get(userId) != null) {
+                this.session.close(new CloseReason(CloseReason.CloseCodes.CLOSED_ABNORMALLY,"6"));
+                return;
+            }
             this.userId = userId;
             //将本次会话存入websocket连接Set
             webSockets.add(this);
@@ -43,6 +50,11 @@ public class TestWebSocket {
     }
     @OnMessage
     public void onMessage(String message) {
+        JSONObject jsonObject = JSON.parseObject(message);
+        if ("lock".equals(jsonObject.get("type").toString())) {
+//            EditDocumentMap.put()
+            this.sendAllMessage(Message.Lock(jsonObject.get("data").toString()));
+        }
         log.info("【websocket消息】收到客户端消息:"+message);
     }
 
@@ -56,7 +68,15 @@ public class TestWebSocket {
 
     @OnClose
     public void onClose(){
-        webSockets.remove(this);
+//        if (webSockets.contains(this)) {
+//            webSockets.remove(this);
+//        }
+//        if (sessionPool.contains(userId)) {
+//            sessionPool.remove(userId);
+//        }
+        this.sendAllMessage(Message.OnlineCount(webSockets.size()));
+        System.out.println(sessionPool);
+        System.out.println(webSockets);
         log.info("有老6离开了，当前人数:" + webSockets.size());
     }
 
