@@ -1,12 +1,10 @@
 package com.yytech.mpcdsepc.websocket;
 
+import com.yytech.mpcdsepc.entity.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,19 +18,27 @@ public class TestWebSocket {
 
     private String userId;
 
+    //存着所有的websocket会话，这个目前的作用除了用来发全部消息和看在线人数以外感觉没用
     private static CopyOnWriteArraySet<TestWebSocket> webSockets =new CopyOnWriteArraySet<>();
 
+    //存着每个用户以及其对应的会话，这个可以用来发送点对点消息
     private static ConcurrentHashMap<String,Session> sessionPool = new ConcurrentHashMap<String,Session>();
 
     @OnOpen
-    public void onOpen(Session session, @PathParam(value="userId")String userId) {
+    public void onOpen(Session session, @PathParam(value="id")String userId) {
         try {
             this.session = session;
             this.userId = userId;
+            //将本次会话存入websocket连接Set
             webSockets.add(this);
+            //把加入的用户ID以及对应对话加入Map
             sessionPool.put(userId, session);
-            log.info("【websocket消息】有新的连接，总数为:"+webSockets.size());
+            this.sendAllMessage(Message.OnlineCount(webSockets.size()));
+            System.out.println("【websocket消息】有新的连接，总数为:" + webSockets.size());
+//            log.info("【websocket消息】有新的连接，总数为:"+webSockets.size());
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(555);
         }
     }
     @OnMessage
@@ -46,6 +52,12 @@ public class TestWebSocket {
 
         log.error("用户错误,原因:"+error.getMessage());
         error.printStackTrace();
+    }
+
+    @OnClose
+    public void onClose(){
+        webSockets.remove(this);
+        log.info("有老6离开了，当前人数:" + webSockets.size());
     }
 
     public void sendAllMessage(String message) {

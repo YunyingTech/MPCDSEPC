@@ -39,6 +39,7 @@ spring:
     password: bCHzbS2DTxxXm8Ni
     url: jdbc:mysql://xayytech.com:3306/mpcdsepc
     driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
   redis:
     host: ncld.nwu.edu.cn
     port: 6379

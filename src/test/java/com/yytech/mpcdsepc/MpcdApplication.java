@@ -7,11 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
  class MpcdApplication {
-    @Autowired
-    private AccountService accountService;
 
     @Test
     void name() {
-        System.out.println(6666);
+        System.out.println(666996);
     }
 }
