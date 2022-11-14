@@ -9,8 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.Date;
 
 @Data
 @ToString
@@ -20,12 +18,12 @@ import java.util.Date;
 public class Tube {
     @TableId(type = IdType.NONE,value = "TubeId")
     private String id;
-    @TableField(value = "SamplepointName")
-    private String SamplePointName;
-    private String SamplingType;
-    private String DiscoveryMethod;
-    private int MixedCT;
-    private String District;
-    private String Street;
-    private String MixDetectionTime;
+    @TableField(value = "SamplePointName")
+    private String samplePointName;
+    private String samplingType;
+    private String discoveryMethod;
+    private int mixedCT;
+    private String district;
+    private String street;
+    private String mixDetectionTime;
 }
