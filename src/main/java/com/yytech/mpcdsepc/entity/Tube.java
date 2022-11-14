@@ -1,5 +1,8 @@
 package com.yytech.mpcdsepc.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
@@ -15,9 +18,14 @@ import java.util.Date;
 @Setter
 @TableName("MPCDSEPC_Tube")
 public class Tube {
-    public int id;
-    public Date createDate;
-    public int creatorId;
-    public int lastModifierId;
-    public int rollbackTimes;
+    @TableId(type = IdType.NONE,value = "TubeId")
+    private String id;
+    @TableField(value = "SamplepointName")
+    private String SamplePointName;
+    private String SamplingType;
+    private String DiscoveryMethod;
+    private int MixedCT;
+    private String District;
+    private String Street;
+    private String MixDetectionTime;
 }

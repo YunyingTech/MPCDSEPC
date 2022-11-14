@@ -1,5 +1,7 @@
 package com.yytech.mpcdsepc.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -16,7 +18,8 @@ import java.util.Date;
 @Setter
 @TableName("MPCDSEPC_Account")
 public class Account {
-    private int managerId;             // 唯一标识符
+    @TableId(type = IdType.NONE)
+    private Integer managerId;             // 唯一标识符
     private String userName;    // 用户名
     private int role;        // 角色
     private String gentle;     // 性别

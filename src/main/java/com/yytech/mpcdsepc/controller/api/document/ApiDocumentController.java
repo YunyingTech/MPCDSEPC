@@ -3,10 +3,12 @@ package com.yytech.mpcdsepc.controller.api.document;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.yytech.mpcdsepc.entity.CorrespondTP;
 import com.yytech.mpcdsepc.entity.Tube;
 import com.yytech.mpcdsepc.result.Result;
+import com.yytech.mpcdsepc.service.CorrespondTPService;
 import com.yytech.mpcdsepc.service.TubeService;
-import com.yytech.mpcdsepc.utils.LockUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,27 +25,30 @@ public class ApiDocumentController {
     @Autowired
     private TubeService tubeService;
 
+    @Autowired
+    private CorrespondTPService correspondTPService;
+
     /**
      * 是否被锁
      * @param map
      * @return
      * @throws JSONException
      */
-    @RequestMapping(value = "/isLockData", produces = {"application/json"}, method = RequestMethod.POST)
-    public boolean isLockData(@RequestBody Map<String,String> map) throws JSONException {
-        return LockUtil.isLockDataUtil(map.get("tubeId") + map.get("personId"));
-    }
+//    @RequestMapping(value = "/isLockData", produces = {"application/json"}, method = RequestMethod.POST)
+//    public boolean isLockData(@RequestBody Map<String,String> map) throws JSONException {
+//        return LockUtil.isLockDataUtil(map.get("tubeId") + map.get("personId"));
+//    }
 
     /**
      * 加入锁
      * @param map
      * @return
      */
-    @RequestMapping(value = "/lockData", produces = {"application/json"}, method = RequestMethod.POST)
-    public String lockData(@RequestBody Map<String,String> map) {
-        LockUtil.lockDataUtil(map.get("tubeId"), map.get("personId"), map.get("accountId"));
-        return "ok";
-    }
+//    @RequestMapping(value = "/lockData", produces = {"application/json"}, method = RequestMethod.POST)
+//    public String lockData(@RequestBody Map<String,String> map) {
+//        LockUtil.lockDataUtil(map.get("tubeId"), map.get("personId"), map.get("accountId"));
+//        return "ok";
+//    }
 
     /**
      * 删除锁
@@ -51,11 +56,11 @@ public class ApiDocumentController {
      * @return
      * @throws JSONException
      */
-    @RequestMapping(value = "/unLockData", produces = {"application/json"}, method = RequestMethod.POST)
-    public String unLock(@RequestBody Map<String,String> map) throws JSONException {
-        LockUtil.unLockDataUtil(map.get("tubeId") + map.get("personId"));
-        return "ok";
-    }
+//    @RequestMapping(value = "/unLockData", produces = {"application/json"}, method = RequestMethod.POST)
+//    public String unLock(@RequestBody Map<String,String> map) throws JSONException {
+//        LockUtil.unLockDataUtil(map.get("tubeId") + map.get("personId"));
+//        return "ok";
+//    }
 
     /**
      * 删除混管信息
@@ -82,11 +87,6 @@ public class ApiDocumentController {
         Map<String,Object> tubeData = new HashMap<>();
         List<Map<String,Object>> tubes = new ArrayList<>();
         if(tube != null){
-            tubeData.put("tubeId",tube.getId());
-            tubeData.put("createId",tube.getCreatorId());
-            tubeData.put("lastModifierId",tube.getLastModifierId());
-            tubeData.put("rollbackTimes",tube.getRollbackTimes());
-            tubeData.put("createDate",tube.getCreateDate().toString());
             tubes.add(tubeData);
             return Result.ok(tubes);
         }
@@ -101,12 +101,25 @@ public class ApiDocumentController {
      * @param id 混管ID
      * @return
      */
-    @RequestMapping(value = "/getRollbackTimes",method = RequestMethod.POST,produces = "application/json")
-    public Result getRollBackTimes(@RequestParam("tubeId") int id){
-        Tube tube = tubeService.getById(id);
-        if (tube != null) {
-            return Result.ok(tube.getRollbackTimes());
-        }
-        return Result.fail("获取试管失败");
+//    @RequestMapping(value = "/getRollbackTimes",method = RequestMethod.POST,produces = "application/json")
+//    public Result getRollBackTimes(@RequestParam("tubeId") int id){
+//        Tube tube = tubeService.getById(id);
+//        if (tube != null) {
+//            return Result.ok(tube.getRollbackTimes());
+//        }
+//        return Result.fail("获取试管失败");
+//    }
+
+    @GetMapping("getAlltubes")
+    public Result getAllTubes(){
+        return Result.ok(tubeService.list());
+    }
+
+    @GetMapping("getTubePersons/{id}")
+    public Result getTubePersons(@PathVariable String id){
+        LambdaQueryWrapper<CorrespondTP> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(CorrespondTP::getTubeId,id);
+        List<CorrespondTP> list = correspondTPService.list(lambdaQueryWrapper);
+        return Result.ok(list);
     }
 }

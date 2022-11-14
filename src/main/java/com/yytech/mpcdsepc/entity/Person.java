@@ -1,5 +1,7 @@
 package com.yytech.mpcdsepc.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -16,6 +18,7 @@ import java.util.Date;
 @Setter
 @TableName("MPCDSEPC_Person")
 public class Person {
+    @TableId(type = IdType.NONE)
     public String ID;               // 身份证号
     public String name;             // 姓名
     public String phoneNum;         // 电话号码

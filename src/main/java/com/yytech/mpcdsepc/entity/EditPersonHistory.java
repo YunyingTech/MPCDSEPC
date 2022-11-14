@@ -3,6 +3,8 @@ package com.yytech.mpcdsepc.entity;/*
  *@Create 2022-11-14 下午 4:16
  */
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
@@ -17,7 +19,8 @@ import java.util.Date;
 @Setter
 @TableName("MPCDSEPC_EditPersonHistory")
 public class EditPersonHistory {
-    private int editPersonID;
+    @TableId(type = IdType.NONE)
+    private Integer editPersonID;
     private String personId;
     private int managerId;
     private Date editTime;
