@@ -22,11 +22,11 @@ public class LoadTubeXlsxToDB extends LoadXlsxToDB  {
         }
 
         for (int row=1;row<=maxRow;row++){
-            tubes[row-1].setId((int) Double.parseDouble(sheet.getRow(row).getCell(0).toString()));
-            tubes[row-1].setCreateDate(DateUtil.getJavaDate(sheet.getRow(row).getCell(1).getNumericCellValue()));
-            tubes[row-1].setCreatorId((int) Double.parseDouble(sheet.getRow(row).getCell(2).toString()));
-            tubes[row-1].setLastModifierId((int) Double.parseDouble(sheet.getRow(row).getCell(3).toString()));
-
+//            tubes[row-1].setTubeId((String) sheet.getRow(row).getCell(0).toString());
+//            tubes[row-1].setCreateDate(DateUtil.getJavaDate(sheet.getRow(row).getCell(1).getNumericCellValue()));
+//            tubes[row-1].setCreatorId((int) Double.parseDouble(sheet.getRow(row).getCell(2).toString()));
+//            tubes[row-1].setLastModifierId((int) Double.parseDouble(sheet.getRow(row).getCell(3).toString()));
+        //TODO 需要重写
         }
 
         for (Tube tube: tubes){

@@ -82,11 +82,12 @@ public class ApiDocumentController {
         Map<String,Object> tubeData = new HashMap<>();
         List<Map<String,Object>> tubes = new ArrayList<>();
         if(tube != null){
-            tubeData.put("tubeId",tube.getId());
-            tubeData.put("createId",tube.getCreatorId());
-            tubeData.put("lastModifierId",tube.getLastModifierId());
-            tubeData.put("rollbackTimes",tube.getRollbackTimes());
-            tubeData.put("createDate",tube.getCreateDate().toString());
+            tubeData.put("tubeId",tube.getTubeId());
+            tubeData.put("district",tube.getDistrict());
+            tubeData.put("discoveryMethod",tube.getDiscoveryMethod());
+            tubeData.put("mixDetection",tube.getMixDetection());
+            tubeData.put("samplingPointName",tube.getSamplingPointName());
+            tubeData.put("street",tube.getStreet());
             tubes.add(tubeData);
             return Result.ok(tubes);
         }
@@ -96,17 +97,18 @@ public class ApiDocumentController {
         }
     }
 
-    /**
-     * 获取混管回转次数
-     * @param id 混管ID
-     * @return
-     */
-    @RequestMapping(value = "/getRollbackTimes",method = RequestMethod.POST,produces = "application/json")
-    public Result getRollBackTimes(@RequestParam("tubeId") int id){
-        Tube tube = tubeService.getById(id);
-        if (tube != null) {
-            return Result.ok(tube.getRollbackTimes());
-        }
-        return Result.fail("获取试管失败");
-    }
+    //TODO 需要重新写怎么判断多次派送
+//    /**
+//     * 获取混管回转次数
+//     * @param id 混管ID
+//     * @return
+//     */
+//    @RequestMapping(value = "/getRollbackTimes",method = RequestMethod.POST,produces = "application/json")
+//    public Result getRollBackTimes(@RequestParam("tubeId") int id){
+//        Tube tube = tubeService.getById(id);
+//        if (tube != null) {
+//            return Result.ok(tube.getRollbackTimes());
+//        }
+//        return Result.fail("获取试管失败");
+//    }
 }
