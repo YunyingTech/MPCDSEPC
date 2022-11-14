@@ -106,10 +106,29 @@ public class ApiDocumentController {
      * @param tube
      * @return
      */
-    @RequestMapping(value = "/updateTube", method = RequestMethod.POST, produces = "application/json")
-    public Result updateTube(@RequestBody Tube tube) {
+//    @PostMapping(value = "/updateTube")
+//    public Result updateTube(@RequestBody Tube tube) {
+//        System.out.println(tube);
+//        boolean flag = tubeService.update(tube, null);
+//        if (!flag) {
+//            return Result.fail();
+//        }
+//        return Result.ok();
+//    }
+
+    @PostMapping(value = "/updateTube")
+    public Result updateTube(@RequestBody Map<String, String> map) {
+        Tube tube = new Tube();
+        tube.setId(map.get("id"));
+        tube.setSamplePointName("SamplePointName");
+        tube.setSamplingType(map.get("SamplingType"));
+        tube.setDiscoveryMethod(map.get("DiscoveryMethod"));
+        tube.setMixedCT(Integer.parseInt(map.get("MixedCT")));
+        tube.setStreet(map.get("Street"));
+        tube.setDistrict(map.get("District"));
+        tube.setMixDetectionTime(map.get("MixDetectionTime"));
         System.out.println(tube);
-        boolean flag = tubeService.update(tube, null);
+        boolean flag = tubeService.updateById(tube);
         if (!flag) {
             return Result.fail();
         }
