@@ -1,5 +1,6 @@
 package com.yytech.mpcdsepc.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.util.Date;
 @ToString
 @Getter
 @Setter
+@TableName("MPCDSEPC_Person")
 public class Person {
     public String ID;               // 身份证号
     public String name;             // 姓名

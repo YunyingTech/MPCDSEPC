@@ -1,5 +1,6 @@
 package com.yytech.mpcdsepc.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.Date;
 @ToString
 @Getter
 @Setter
+@TableName("MPCDSEPC_Tube")
 public class Tube {
     public int id;
     public Date createDate;
