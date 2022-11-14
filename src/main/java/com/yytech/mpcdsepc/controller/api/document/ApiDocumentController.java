@@ -25,6 +25,7 @@ public class ApiDocumentController {
      * @return
      * @throws JSONException
      */
+
     @RequestMapping(value = "/isLockData", produces = {"application/json"}, method = RequestMethod.POST)
     public boolean isLockData(@RequestBody Map<String,String> map) throws JSONException {
         return LockUtil.isLockDataUtil(map.get("tubeId") + map.get("personId"));
