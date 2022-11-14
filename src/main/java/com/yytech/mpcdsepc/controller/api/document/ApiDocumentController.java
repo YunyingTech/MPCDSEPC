@@ -102,6 +102,21 @@ public class ApiDocumentController {
     }
 
     /**
+     * 更新单管数据
+     * @param tube
+     * @return
+     */
+    @RequestMapping(value = "/updateTube", method = RequestMethod.POST, produces = "application/json")
+    public Result updateTube(@RequestBody Tube tube) {
+        System.out.println(tube);
+        boolean flag = tubeService.update(tube, null);
+        if (!flag) {
+            return Result.fail();
+        }
+        return Result.ok();
+    }
+
+    /**
      * 获取混管回转次数
      * @return
      */
