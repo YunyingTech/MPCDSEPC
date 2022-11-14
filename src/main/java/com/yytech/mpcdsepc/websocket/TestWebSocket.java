@@ -32,7 +32,7 @@ public class TestWebSocket {
         try {
             this.session = session;
             if (sessionPool.get(userId) != null) {
-                this.session.close(new CloseReason(CloseReason.CloseCodes.CLOSED_ABNORMALLY,"6"));
+//                this.session.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER,"当前账号在别处已经登陆"));
                 return;
             }
             this.userId = userId;
@@ -42,7 +42,7 @@ public class TestWebSocket {
             sessionPool.put(userId, session);
             this.sendAllMessage(Message.OnlineCount(webSockets.size()));
             System.out.println("【websocket消息】有新的连接，总数为:" + webSockets.size());
-//            log.info("【websocket消息】有新的连接，总数为:"+webSockets.size());
+            log.info("【websocket消息】有新的连接，总数为:"+sessionPool);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(555);
@@ -68,15 +68,18 @@ public class TestWebSocket {
 
     @OnClose
     public void onClose(){
-//        if (webSockets.contains(this)) {
-//            webSockets.remove(this);
-//        }
-//        if (sessionPool.contains(userId)) {
-//            sessionPool.remove(userId);
-//        }
+        if (webSockets.contains(this)) {
+            webSockets.remove(this);
+        }
+
         this.sendAllMessage(Message.OnlineCount(webSockets.size()));
         System.out.println(sessionPool);
         System.out.println(webSockets);
+        if (userId != null && sessionPool.containsKey(userId)) {
+            sessionPool.remove(userId);
+        }
+        System.out.println(userId);
+        System.out.println(sessionPool);
         log.info("有老6离开了，当前人数:" + webSockets.size());
     }
 
