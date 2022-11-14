@@ -1,3 +1,4 @@
+/*
 package com.yytech.mpcdsepc.file.xlsxLoad;
 
 import com.yytech.mpcdsepc.entity.Person;
@@ -8,9 +9,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+*/
 /**
  * load person到数据库
- */
+ *//*
+
 @Component
 public class LoadPersonXlsxToDB extends LoadXlsxToDB{
     @Resource
@@ -55,3 +58,4 @@ public class LoadPersonXlsxToDB extends LoadXlsxToDB{
     }
 
 }
+*/

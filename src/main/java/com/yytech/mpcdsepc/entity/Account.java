@@ -1,5 +1,6 @@
 package com.yytech.mpcdsepc.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.util.Date;
 @ToString
 @Getter
 @Setter
+@TableName("accounts")
 public class Account {
     private int id;             // 唯一标识符
     private String userName;    // 用户名

@@ -6,15 +6,14 @@ package com.yytech.mpcdsepc.controller.api.account;
  **/
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yytech.mpcdsepc.entity.Account;
 import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.impl.AccountServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author Lettle
@@ -30,7 +29,10 @@ public class ApiAccountController {
 
     @PostMapping("login")
     public Result login(@RequestBody Map<String, String> map) {
-        Account account = accountService.accountLogin(map.get("username"), map.get("mm"));
+//        Account account = accountService.accountLogin(map.get("username"), map.get("mm"));
+        LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Account::getUserName,map.get("username")).eq(Account::getPassWord,map.get("mm"));
+        Account account = accountService.getOne(lambdaQueryWrapper);
         if(account == null){
             return Result.fail("账号或密码错误");
         }
@@ -67,7 +69,7 @@ public class ApiAccountController {
      */
     @GetMapping("queryAll")
     public Result queryAllUser() {
-        return Result.ok(accountService.getAllAccount());
+        return Result.ok(accountService.list());
     }
 
     /**
@@ -77,14 +79,15 @@ public class ApiAccountController {
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public Result update(Account account) {
         System.out.println("update!!!");    // TODO: After debug, then delete it.
-        accountService.updateAccount(account);
+
+        accountService.update(account,null);
         return Result.ok();
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signup(@RequestBody JSONObject jsonObject) {
         Account res = new Account();
-        accountService.insertAccount(res);
+        accountService.save(res);
         return "";//TODO 补全
     }
 

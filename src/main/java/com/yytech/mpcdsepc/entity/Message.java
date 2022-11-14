@@ -18,8 +18,12 @@ public class Message<T> {
     public static <T> String Lock (String id){
         return JSON.toJSONString(new Message("Lock", id));
     }
-    public static <T> Message info (T data){
-        return new Message("info", data);
+
+    public static <T> String info (T data){
+        return JSON.toJSONString(new Message("info", data));
+    }
+    public static <T> String system (T data){
+        return JSON.toJSONString(new Message("system", data));
     }
 
 }

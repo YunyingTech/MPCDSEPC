@@ -5,8 +5,6 @@ server:
 mybatis:
   type-aliases-package: com.yytech.mpcdsepc.entity
   mapper-locations: classpath:mapper/*.xml
-  configuration:
-    use-generated-keys: true
 
 # log4j2 配置
 logging:
@@ -45,3 +43,6 @@ spring:
     port: 6379
     database: 1 #请勿修改
     password: 20020602mM
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false

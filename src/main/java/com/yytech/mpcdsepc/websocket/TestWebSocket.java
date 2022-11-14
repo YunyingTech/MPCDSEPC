@@ -31,11 +31,11 @@ public class TestWebSocket {
     public void onOpen(Session session, @PathParam(value="id")String userId) {
         try {
             this.session = session;
+            this.userId = userId;
             if (sessionPool.get(userId) != null) {
 //                this.session.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER,"当前账号在别处已经登陆"));
-                return;
+               sessionPool.get(userId).close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT,"账号在别处登陆，你已被迫下线"));
             }
-            this.userId = userId;
             //将本次会话存入websocket连接Set
             webSockets.add(this);
             //把加入的用户ID以及对应对话加入Map

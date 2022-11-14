@@ -7,11 +7,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 @Component
 public class LoadTubeXlsxToDB extends LoadXlsxToDB  {
+
     @Autowired
     public TubeServiceImpl tubeService;
 
