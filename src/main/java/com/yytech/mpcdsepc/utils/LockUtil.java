@@ -25,7 +25,7 @@ public class LockUtil {
             JSONObject jsonData = new JSONObject();
             jsonData.put("time", System.currentTimeMillis());
             jsonData.put("accountId", account.getManagerId());
-            data.put(String.valueOf(tube.getTubeId()) + person.getPersonID(), jsonData.toString());
+            data.put(String.valueOf(tube.getId()) + person.getID(), jsonData.toString());
             return true;
         } catch (Exception e) {
             e.printStackTrace();
