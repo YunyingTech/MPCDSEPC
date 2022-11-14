@@ -37,21 +37,21 @@ public class ApiPersonController {
         return Result.ok(person);
     }
 
-    @GetMapping("getPersonByTubeId")
-    public Result getPersonByTubeId(@RequestParam("tubeId") int ID) {
-        LambdaQueryWrapper<Person> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Person::getTubeId,ID);
-        List<Person> PersonList = personService.list(lambdaQueryWrapper);
-        return Result.ok(PersonList);
-    }
+//    @GetMapping("getPersonByTubeId")
+//    public Result getPersonByTubeId(@RequestParam("tubeId") int ID) {
+//        LambdaQueryWrapper<Person> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+//        lambdaQueryWrapper.eq(Person::getTubeId,ID);
+//        List<Person> PersonList = personService.list(lambdaQueryWrapper);
+//        return Result.ok(PersonList);
+//    }
 
-    @GetMapping("getPersonByAccountId")
-    public Result getPersonByAccountId(@RequestParam("accountId") int ID) {
-        LambdaQueryWrapper<Person> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Person::getAccountId,ID);
-        List<Person> PersonList = personService.list(lambdaQueryWrapper);
-        return Result.ok(PersonList);
-    }
+//    @GetMapping("getPersonByAccountId")
+//    public Result getPersonByAccountId(@RequestParam("accountId") int ID) {
+//        LambdaQueryWrapper<Person> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+//        lambdaQueryWrapper.eq(Person::getAccountId,ID);
+//        List<Person> PersonList = personService.list(lambdaQueryWrapper);
+//        return Result.ok(PersonList);
+//    }
 
     @PostMapping("insertPerson")
     public Result insertPerson(@RequestBody Person person) {
