@@ -8,6 +8,7 @@ import com.yytech.mpcdsepc.entity.CorrespondTP;
 import com.yytech.mpcdsepc.entity.Tube;
 import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.CorrespondTPService;
+import com.yytech.mpcdsepc.service.PersonService;
 import com.yytech.mpcdsepc.service.TubeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -27,6 +29,9 @@ public class ApiDocumentController {
 
     @Autowired
     private CorrespondTPService correspondTPService;
+
+    @Autowired
+    private PersonService personService;
 
     /**
      * 是否被锁
@@ -98,7 +103,6 @@ public class ApiDocumentController {
 
     /**
      * 获取混管回转次数
-     * @param id 混管ID
      * @return
      */
 //    @RequestMapping(value = "/getRollbackTimes",method = RequestMethod.POST,produces = "application/json")
@@ -120,6 +124,8 @@ public class ApiDocumentController {
         LambdaQueryWrapper<CorrespondTP> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(CorrespondTP::getTubeId,id);
         List<CorrespondTP> list = correspondTPService.list(lambdaQueryWrapper);
+        List<String> personIds = list.stream().map(i -> i.getPersonId()).collect(Collectors.toList());
+        personService.listByIds(personIds);
         return Result.ok(list);
     }
 }
