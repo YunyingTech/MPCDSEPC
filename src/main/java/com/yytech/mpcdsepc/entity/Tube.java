@@ -15,9 +15,12 @@ import java.util.Date;
 @Setter
 @TableName("MPCDSEPC_Tube")
 public class Tube {
-    public int id;
-    public Date createDate;
-    public int creatorId;
-    public int lastModifierId;
-    public int rollbackTimes;
+    private String tubeId;
+    private String samplingPointName;
+    private String samplingType;
+    private String discoveryMethod;
+    private int mixedCT;
+    private String district;
+    private String street;
+    private String mixDetection;
 }
