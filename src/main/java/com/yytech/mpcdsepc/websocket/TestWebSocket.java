@@ -25,7 +25,8 @@ public class TestWebSocket {
 
     //存着每个用户以及其对应的会话，这个可以用来发送点对点消息
     private static ConcurrentHashMap<String,Session> sessionPool = new ConcurrentHashMap<String,Session>();
-    private static ConcurrentHashMap<String,String> EditDocumentMap = new ConcurrentHashMap<String,String>();
+
+    private static ConcurrentHashMap<String,String> editDocumentMap = new ConcurrentHashMap<String,String>();
 
     @OnOpen
     public void onOpen(Session session, @PathParam(value="id")String userId) {
@@ -51,11 +52,27 @@ public class TestWebSocket {
     @OnMessage
     public void onMessage(String message) {
         JSONObject jsonObject = JSON.parseObject(message);
-        if ("lock".equals(jsonObject.get("type").toString())) {
-//            EditDocumentMap.put()
-            this.sendAllMessage(Message.Lock(jsonObject.get("data").toString()));
-        }
         log.info("【websocket消息】收到客户端消息:"+message);
+        if("edit".equals(jsonObject.get("type").toString())){
+            if (editDocumentMap.contains(jsonObject.get("documentId").toString())) {
+                this.sendOneMessage(jsonObject.get("operator").toString(), Message.build("NoPermiited",null));
+                return;
+            }
+            this.sendOneMessage(jsonObject.get("operator").toString(), Message.build("Permiited",null));
+            return;
+        }
+
+        if ("lock".equals(jsonObject.get("type").toString())) {
+            editDocumentMap.put(jsonObject.get("operator").toString(),jsonObject.get("documentId").toString());
+            System.out.println(editDocumentMap);
+            this.sendAllMessage(Message.Lock(jsonObject.get("documentId").toString()));
+            return;
+        }
+        if ("finishEdit".equals(jsonObject.get("type").toString())) {
+            editDocumentMap.remove(userId);
+            this.sendAllMessage(Message.build("unlock",jsonObject.get("documentId").toString()));
+            this.sendAllMessage(Message.build("updateDocument",jsonObject.get("data").toString()));
+        }
     }
 
 
@@ -78,8 +95,12 @@ public class TestWebSocket {
         if (userId != null && sessionPool.containsKey(userId)) {
             sessionPool.remove(userId);
         }
+        if(editDocumentMap.containsKey(userId)){
+            editDocumentMap.remove(userId);
+        }
         System.out.println(userId);
         System.out.println(sessionPool);
+        System.out.println(editDocumentMap);
         log.info("有老6离开了，当前人数:" + webSockets.size());
     }
 

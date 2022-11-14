@@ -25,5 +25,8 @@ public class Message<T> {
     public static <T> String system (T data){
         return JSON.toJSONString(new Message("system", data));
     }
+    public static <T> String build (String type,T data){
+        return JSON.toJSONString(new Message(type, data));
+    }
 
 }
