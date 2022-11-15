@@ -3,11 +3,17 @@ package com.yytech.mpcdsepc.service.impl;/*
  *@Create 2022-11-14 下午 4:32
  */
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yytech.mpcdsepc.entity.EditSampleHistory;
 import com.yytech.mpcdsepc.mapper.EditSampleHistoryMapper;
+import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.EditSampleHistoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 public class EditSampleHistoryImpl extends ServiceImpl<EditSampleHistoryMapper, EditSampleHistory> implements EditSampleHistoryService {

@@ -3,6 +3,7 @@ package com.yytech.mpcdsepc.entity;/*
  *@Create 2022-11-14 下午 4:16
  */
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -20,19 +21,34 @@ import java.util.Date;
 @TableName("MPCDSEPC_EditSampleHistory")
 public class EditSampleHistory {
     @TableId(type = IdType.NONE)
-    private Integer editSampleId;
+    @JSONField(name = "editSampleId")
+    private int editSampleId;
+    @JSONField(name = "sampleId")
     private int sampleId;
+    @JSONField(name = "managerId")
     private int managerId;
+    @JSONField(name = "discoveryMethod")
     private String discoveryMethod;
+    @JSONField(name = "districtEdit")
     private String districtEdit;
+    @JSONField(name = "streetEdit")
     private String streetEdit;
+    @JSONField(name = "pointEdit")
     private String pointEdit;
+    @JSONField(name = "samplingTypeEdit")
     private String samplingTypeEdit;
+    @JSONField(name = "mixedCT")
     private int mixedCT;
+    @JSONField(name = "mixedTimeEdit")
     private String mixedTimeEdit;
+    @JSONField(name = "riskElement")
     private String riskElement;
+    @JSONField(name = "testResultEdit")
     private String testResultEdit;
+    @JSONField(name = "singleCTEdit")
     private int singleCTEdit;
+    @JSONField(name = "singleTestTimeEdit")
     private String singleTestTimeEdit;
+    @JSONField(name = "editTime")
     private Date editTime;
 }
