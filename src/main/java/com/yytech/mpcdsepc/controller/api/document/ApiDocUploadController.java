@@ -4,6 +4,9 @@
  * @Description: 上传文件
  **/
 package com.yytech.mpcdsepc.controller.api.document;
+import com.google.gson.Gson;
+import com.yytech.mpcdsepc.result.Result;
+import com.yytech.mpcdsepc.utils.POIUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/mpcdsepc/api/document")
@@ -69,6 +73,11 @@ public class ApiDocUploadController {
         }
 
         return "ok";
+    }
+    @PostMapping("readExcel")
+    public Result readExcel(@RequestParam("file") MultipartFile file) throws IOException {
+        List<String[]> strings = POIUtils.readExcel(file);
+        return Result.ok(strings);
     }
 
 }

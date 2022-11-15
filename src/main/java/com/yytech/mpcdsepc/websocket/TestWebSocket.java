@@ -91,6 +91,7 @@ public class TestWebSocket {
             LambdaUpdateWrapper<Person> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
             lambdaUpdateWrapper.set(Person::getIsLocked,"0").eq(Person::getID,jsonObject.get("personId").toString());
             personService.update(lambdaUpdateWrapper);
+            this.sendAllMessage(Message.build("unlock",null));
             return;
         }
         if ("confirmEdit".equals(jsonObject.get("type").toString())) {
