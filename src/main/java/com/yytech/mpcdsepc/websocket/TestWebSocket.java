@@ -2,10 +2,15 @@ package com.yytech.mpcdsepc.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.yytech.mpcdsepc.entity.Message;
+import com.yytech.mpcdsepc.entity.Person;
+import com.yytech.mpcdsepc.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -16,6 +21,14 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Slf4j
 @ServerEndpoint("/websocket/{id}")
 public class TestWebSocket {
+
+    private static PersonService personService;
+
+    @Autowired
+    public void setPersonService(PersonService personService){
+        TestWebSocket.personService = personService;
+    }
+
     private Session session;
 
     private String userId;
@@ -53,24 +66,32 @@ public class TestWebSocket {
     public void onMessage(String message) {
         JSONObject jsonObject = JSON.parseObject(message);
         log.info("【websocket消息】收到客户端消息:"+message);
+        System.out.println(jsonObject.get("operator").toString());
         if("edit".equals(jsonObject.get("type").toString())){
-            if (editDocumentMap.contains(jsonObject.get("documentId").toString())) {
+            if (editDocumentMap.contains(jsonObject.get("personId").toString())) {
                 this.sendOneMessage(jsonObject.get("operator").toString(), Message.build("NoPermiited",null));
                 return;
             }
             this.sendOneMessage(jsonObject.get("operator").toString(), Message.build("Permiited",null));
             return;
         }
-
+//
         if ("lock".equals(jsonObject.get("type").toString())) {
-            editDocumentMap.put(jsonObject.get("operator").toString(),jsonObject.get("documentId").toString());
+            System.out.println(jsonObject);
+            editDocumentMap.put(jsonObject.get("operator").toString(),jsonObject.get("personId").toString());
             System.out.println(editDocumentMap);
-            this.sendAllMessage(Message.Lock(jsonObject.get("documentId").toString()));
+            this.sendAllMessage(Message.Lock(jsonObject.get("personId").toString()));
+            LambdaUpdateWrapper<Person> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            lambdaUpdateWrapper.set(Person::getIsLocked,"1").eq(Person::getID,jsonObject.get("personId").toString());
+            personService.update(lambdaUpdateWrapper);
             return;
         }
         if ("finishEdit".equals(jsonObject.get("type").toString())) {
             editDocumentMap.remove(userId);
-            this.sendAllMessage(Message.build("unlock",jsonObject.get("documentId").toString()));
+            LambdaUpdateWrapper<Person> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            lambdaUpdateWrapper.set(Person::getIsLocked,"0").eq(Person::getID,jsonObject.get("personId").toString());
+            personService.update(lambdaUpdateWrapper);
+            this.sendAllMessage(Message.build("unlock",jsonObject.get("personId").toString()));
             this.sendAllMessage(Message.build("updateDocument",jsonObject.get("data").toString()));
         }
     }

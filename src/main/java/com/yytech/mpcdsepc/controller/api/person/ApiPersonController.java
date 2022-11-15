@@ -5,9 +5,12 @@ package com.yytech.mpcdsepc.controller.api.person;/**
  **/
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.yytech.mpcdsepc.entity.CorrespondTP;
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.result.Result;
+import com.yytech.mpcdsepc.service.CorrespondTPService;
 import com.yytech.mpcdsepc.service.PersonService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -22,6 +25,9 @@ import java.util.List;
 public class ApiPersonController {
     @Resource
     private PersonService personService;
+
+    @Resource
+    private CorrespondTPService correspondTPService;
 
     @GetMapping("getPersonByName")
     public Result getPersonByName(@RequestParam String name) {
@@ -58,10 +64,15 @@ public class ApiPersonController {
 //        return Result.ok(PersonList);
 //    }
 
-    @PostMapping("insertPerson")
-    public Result insertPerson(@RequestBody Person person) {
-        boolean flag = personService.save(person);
-        if(flag) {
+    @PostMapping("insertPerson/{tubeId}")
+    @Transactional(rollbackFor = Exception.class)
+    public Result insertPerson(@RequestBody Person person,@PathVariable String tubeId) {
+        boolean flag1 = personService.save(person);
+        CorrespondTP correspondTP = new CorrespondTP();
+        correspondTP.setPersonId(person.getID());
+        correspondTP.setTubeId(tubeId);
+        boolean flag2 = correspondTPService.save(correspondTP);
+        if(flag1 && flag2) {
             return Result.ok();
         } else {
             return Result.build(400,"ID重复");
