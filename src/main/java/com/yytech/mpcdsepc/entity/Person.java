@@ -37,6 +37,6 @@ public class Person {
     private String samplingTime;       // 采样日期
     private String diagnosisTime;
     private String symptomType;
-    private Integer isLocked;
+    private String isLocked;
 }
 
