@@ -117,7 +117,11 @@ public class TestWebSocket {
             sessionPool.remove(userId);
         }
         if(editDocumentMap.containsKey(userId)){
+            LambdaUpdateWrapper<Person> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            lambdaUpdateWrapper.set(Person::getIsLocked,"0").eq(Person::getID,editDocumentMap.get(userId));
+            boolean update = personService.update(lambdaUpdateWrapper);
             editDocumentMap.remove(userId);
+            System.out.println(update);
         }
         System.out.println(userId);
         System.out.println(sessionPool);

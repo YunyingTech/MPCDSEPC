@@ -17,8 +17,8 @@ import lombok.ToString;
 @Setter
 @TableName("MPCDSEPC_CorrespondTP")
 public class CorrespondTP {
-    @TableId(type = IdType.NONE)
-    private Integer sampleId;
+    @TableId(type = IdType.ASSIGN_ID)
+    private String sampleId;
     private String personId;
     private String tubeId;
 }
