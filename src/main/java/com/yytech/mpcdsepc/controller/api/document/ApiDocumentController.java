@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yytech.mpcdsepc.entity.CorrespondTP;
+import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.entity.Tube;
 import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.CorrespondTPService;
@@ -140,7 +141,8 @@ public class ApiDocumentController {
         lambdaQueryWrapper.eq(CorrespondTP::getTubeId,id);
         List<CorrespondTP> list = correspondTPService.list(lambdaQueryWrapper);
         List<String> personIds = list.stream().map(i -> i.getPersonId()).collect(Collectors.toList());
-        personService.listByIds(personIds);
-        return Result.ok(list);
+        List<Person> people = personService.listByIds(personIds);
+        //DO NOT CHANGE IT AGAIN
+        return Result.ok(people);
     }
 }

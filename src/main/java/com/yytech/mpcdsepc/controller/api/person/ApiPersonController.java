@@ -31,10 +31,15 @@ public class ApiPersonController {
         return Result.ok(PersonList);
     }
 
-    @GetMapping("getPersonById")
-    public Result getPersonById(@RequestParam String ID) {
-        Person person = personService.getById(ID);
-        return Result.ok(person);
+    @GetMapping("getPersonById/{id}")
+    public Result getPersonById(@PathVariable String id) {
+        LambdaQueryWrapper<Person> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(Person::getID,id);
+        List<Person> list = personService.list(lambdaQueryWrapper);
+        if (list.size() > 0) {
+            return Result.ok(list);
+        }
+        return Result.fail("无数据");
     }
 
 //    @GetMapping("getPersonByTubeId")
@@ -65,7 +70,7 @@ public class ApiPersonController {
 
     @PutMapping("updatePerson")
     public Result updatePerson(@RequestParam Person person) {
-        boolean flag = personService.update(person,null);
+        boolean flag = personService.updateById(person);
         if(flag) {
             return Result.ok();
         } else {
