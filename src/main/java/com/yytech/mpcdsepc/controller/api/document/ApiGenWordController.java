@@ -30,15 +30,24 @@ import java.util.Map;
 @RestController
 @RequestMapping("/mpcdsepc/api/document")
 public class ApiGenWordController {
-
     @Autowired
     private TubeService tubeService;
+
+    public void genWord(){
+        Map<String, Object> dataMap = new HashMap<>();
+       // dataMap.put();
+        try {
+            saveWord("word.docx",dataMap);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void saveWord(String filePath, Map<String, Object> dataMap) throws IOException {
         Configuration configuration = new Configuration();
         configuration.setDefaultEncoding("utf-8");
         configuration.setClassForTemplateLoading(ApiGenWordController.class, "/");
-        Template template = configuration.getTemplate("templates/word.xml");
+        Template template = configuration.getTemplate("word.xml");
         InputStreamSource streamSource = createWord(template, dataMap);
         InputStream inputStream = streamSource.getInputStream();
         FileOutputStream outputStream = new FileOutputStream(filePath);
@@ -71,22 +80,5 @@ public class ApiGenWordController {
         return null;
     }
 
-    @RequestMapping(value = "/getPersonData",method = RequestMethod.POST,produces = "application/json")
-    public void test(@RequestParam("PersonId") int id) {
-        try {
-            Tube tube= tubeService.getTubeById(id);
 
-            JSONArray tubes = new JSONArray();
-            JSONObject tubeData = new JSONObject();
-            Map<String, Object> dataMap = new HashMap<>();
-            dataMap.put("samplingDate", tube.getCreateDate().toString());
-
-
-            saveWord("templates/word.doc", dataMap);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
 }
