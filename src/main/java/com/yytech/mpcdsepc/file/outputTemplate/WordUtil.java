@@ -29,7 +29,7 @@ public class WordUtil {
         // 设置FreeMarker生成Word文档所需要的模板的路径
         configuration.setDirectoryForTemplateLoading(new File("E:\\code\\MPCDSEPC\\src\\main\\resources\\static\\template"));
         // 设置FreeMarker生成Word文档所需要的模板
-        Template t = configuration.getTemplate("word_template2.ftl", "UTF-8");
+        Template t = configuration.getTemplate("word_template.ftl", "UTF-8");
         // 创建一个Word文档的输出流
         Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(fileName)), "UTF-8"));
         //FreeMarker使用Word模板和数据生成Word文档

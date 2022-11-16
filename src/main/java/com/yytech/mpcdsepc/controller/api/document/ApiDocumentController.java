@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.yytech.mpcdsepc.entity.CorrespondTP;
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.entity.Tube;
@@ -11,6 +13,7 @@ import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.CorrespondTPService;
 import com.yytech.mpcdsepc.service.PersonService;
 import com.yytech.mpcdsepc.service.TubeService;
+import org.apache.commons.collections4.Get;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -144,5 +147,49 @@ public class ApiDocumentController {
         List<Person> people = personService.listByIds(personIds);
         //DO NOT CHANGE IT AGAIN
         return Result.ok(people);
+    }
+
+    /**
+     * 获取待完善信息数量
+     *
+     * @param district district区，留空时为所有区
+     * @return
+     */
+    @GetMapping("/getUnimprovedNum")
+    public Result getUnimproved(String district) {
+        QueryWrapper<Person> wrapper = Wrappers.query();
+        if (!"".equals(district)) {
+            wrapper.eq("district", district);
+        }
+        wrapper.and(i -> i.isNull("name")
+                .or().isNull("phone")
+                .or().isNull("detailedAddress")
+                .or().isNull("job")
+                .or().isNull("comeFrom")
+                .or().isNull("highRiskArea")
+                .or().isNull("vaccine")
+                .or().isNull("haveBeenInfected")
+                .or().isNull("ModeOfInfection")
+                .or().isNull("samplingPoint")
+                .or().isNull("samplingTime")
+                .or().isNull("diagnosisTime")
+                .or().isNull("symptomType"));
+        return Result.ok(personService.count(wrapper));
+    }
+
+    /**
+     * 获取待接收数量
+     *
+     * @param district district区，留空时为所有区
+     * @return
+     */
+    @GetMapping("/getUnreceivedNum")
+    public Result getUnreceivedNum(String district) {
+        QueryWrapper<Person> wrapper = Wrappers.query();
+        if (!"".equals(district)) {
+            wrapper.eq("district", district);
+        }
+        wrapper.eq("receiveStatus", "0");
+        return Result.ok(personService.count(wrapper));
     }
 }

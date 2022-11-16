@@ -1,20 +1,49 @@
 package com.yytech.mpcdsepc.utils;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.Version;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class POIUtils {
 
     private final static String xls = "xls";
     private final static String xlsx = "xlsx";
 
+    private final static String WORD_TEMPLATE_PATH = "./excels";
+
+    /**
+     *
+     * @param dataMap   要填入数据的键值对
+     * @param fileName  要生成的文件名
+     * @return String 类型的文件下载链接
+     */
+    public static String generateWord(Map<String, Object> dataMap, String fileName) throws Exception {
+        // 设置FreeMarker的版本和编码格式
+        Configuration configuration = new Configuration(new Version("2.3.28"));
+        configuration.setDefaultEncoding("UTF-8");
+
+        // 设置FreeMarker生成Word文档所需要的模板的路径
+        configuration.setDirectoryForTemplateLoading(new File(WORD_TEMPLATE_PATH));
+        // 设置FreeMarker生成Word文档所需要的模板
+        Template t = configuration.getTemplate("word_template.ftl", "UTF-8");
+        // 创建一个Word文档的输出流
+        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8));
+        //FreeMarker使用Word模板和数据生成Word文档
+        t.process(dataMap, out);
+        out.flush();
+        out.close();
+        return fileName;
+    }
 
     public static List<String[]> readExcel(MultipartFile file) throws IOException {
         //检查文件
@@ -25,7 +54,7 @@ public class POIUtils {
         //获得Workbook工作薄对象
         Workbook workbook = getWorkBook(file);
         //创建返回对象，把每行中的值作为一个数组，所有行作为一个集合返回
-        List<String[]> list = new ArrayList<String[]>();
+        List<String[]> list = new ArrayList<>();
         if(workbook != null){
             for(int sheetNum = 0;sheetNum < workbook.getNumberOfSheets();sheetNum++){
                 //获得当前sheet工作表
@@ -61,7 +90,7 @@ public class POIUtils {
         }
         return list;
     }
-    public static int checkFile(MultipartFile file) throws IOException{
+    public static int checkFile(MultipartFile file) {
         //判断文件是否存在
         if(null == file){
             return 101;
