@@ -164,6 +164,7 @@ public class TestWebSocket {
             }
         }
     }
+
     public void sendMoreMessage(String[] userIds, String message) {
         for(String userId:userIds) {
             Session session = sessionPool.get(userId);
@@ -176,7 +177,6 @@ public class TestWebSocket {
                 }
             }
         }
-
     }
 
 }

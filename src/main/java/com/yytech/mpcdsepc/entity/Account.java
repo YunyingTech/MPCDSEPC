@@ -18,7 +18,7 @@ import java.util.Date;
 @Setter
 @TableName("MPCDSEPC_Account")
 public class Account {
-    @TableId(type = IdType.NONE)
+    @TableId(type = IdType.AUTO)
     private Integer managerId;             // 唯一标识符
     private String userName;    // 用户名
     private int role;        // 角色
@@ -30,5 +30,5 @@ public class Account {
     private Date createDate;    // 创建时间
     private String teleNum;     // 电话号码
     private int isOnline;   // 当前是否在线
-    private String manageDistrict;
+    private String manageDistrict;   //管理的地区
 }

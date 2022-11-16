@@ -8,11 +8,14 @@ package com.yytech.mpcdsepc.controller.api.account;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yytech.mpcdsepc.entity.Account;
+import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.impl.AccountServiceImpl;
+import com.yytech.mpcdsepc.utils.StatusCodeUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,7 +32,6 @@ public class ApiAccountController {
 
     @PostMapping("login")
     public Result login(@RequestBody Map<String, String> map) {
-//        Account account = accountService.accountLogin(map.get("username"), map.get("mm"));
         LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Account::getUserName,map.get("username")).eq(Account::getPassWord,map.get("mm"));
         Account account = accountService.getOne(lambdaQueryWrapper);
@@ -67,10 +69,10 @@ public class ApiAccountController {
      * TODO: 这里需要识别合法token
      * @return
      */
-    @GetMapping("queryAll")
-    public Result queryAllUser() {
-        return Result.ok(accountService.list());
-    }
+//    @GetMapping("queryAll")
+//    public Result queryAllUser() {
+//        return Result.ok(accountService.list());
+//    }
 
     /**
      * TODO: 这里需要识别合法token
@@ -84,11 +86,24 @@ public class ApiAccountController {
         return Result.ok();
     }
 
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String signup(@RequestBody JSONObject jsonObject) {
-        Account res = new Account();
-        accountService.save(res);
-        return "";//TODO 补全
+    @PostMapping("addAccount")
+    public Result addAccount(@RequestBody Account account){
+        boolean save = accountService.save(account);
+        if (!save) {
+            return Result.build(StatusCodeUtil.RegError,"注册失败");
+        }
+        return Result.build(StatusCodeUtil.RegSuccess,"注册成功");
+    }
+
+    @GetMapping("query/{role}")
+    public Result addAccount(@PathVariable int role){
+        LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Account::getRole,role);
+        List<Account> list = accountService.list(lambdaQueryWrapper);
+        if (list.size() == 0) {
+            return Result.fail("无数据");
+        }
+        return Result.ok(list);
     }
 
     @PostMapping("logout")
