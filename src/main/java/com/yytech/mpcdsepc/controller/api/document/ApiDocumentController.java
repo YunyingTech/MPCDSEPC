@@ -6,17 +6,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.yytech.mpcdsepc.entity.CorrespondTP;
-import com.yytech.mpcdsepc.entity.Person;
-import com.yytech.mpcdsepc.entity.Tube;
+import com.yytech.mpcdsepc.entity.*;
 import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.CorrespondTPService;
+import com.yytech.mpcdsepc.service.EditSampleHistoryService;
 import com.yytech.mpcdsepc.service.PersonService;
 import com.yytech.mpcdsepc.service.TubeService;
 import org.apache.commons.collections4.Get;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,6 +35,9 @@ public class ApiDocumentController {
 
     @Autowired
     private PersonService personService;
+
+    @Resource
+    private EditSampleHistoryService editSampleHistoryService;
 
     /**
      * 是否被锁
@@ -109,7 +113,17 @@ public class ApiDocumentController {
      * @return
      */
     @PostMapping("/updateTube")
-    public Result updateTube(@RequestBody Tube tube) {
+    public Result updateTube(@RequestBody Tube tube, @RequestBody PositiveSample positiveSample,@RequestBody Integer editSampleId,@RequestBody Integer managerId) {
+        SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date currentTime = simpleFormatter.parse(new Date().toString());
+            EditSampleHistory editSampleHistory = new EditSampleHistory(editSampleId, positiveSample, managerId, currentTime);
+            editSampleHistoryService.save(editSampleHistory);
+        } catch (ParseException e) {
+            System.out.println("时间格式转换失败");
+            throw new RuntimeException(e);
+        }
+
         System.out.println(tube);
         boolean flag = tubeService.updateById(tube);
         if (!flag) {

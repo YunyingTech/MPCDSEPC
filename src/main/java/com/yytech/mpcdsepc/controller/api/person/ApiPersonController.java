@@ -6,14 +6,19 @@ package com.yytech.mpcdsepc.controller.api.person;/**
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yytech.mpcdsepc.entity.CorrespondTP;
+import com.yytech.mpcdsepc.entity.EditPersonHistory;
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.CorrespondTPService;
 import com.yytech.mpcdsepc.service.PersonService;
+import com.yytech.mpcdsepc.service.impl.EditPersonHistoryServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +30,9 @@ import java.util.List;
 public class ApiPersonController {
     @Resource
     private PersonService personService;
+
+    @Resource
+    private EditPersonHistoryServiceImpl editPersonHistoryService;
 
     @Resource
     private CorrespondTPService correspondTPService;
@@ -79,8 +87,24 @@ public class ApiPersonController {
         }
     }
 
+    /**
+     *
+     * @param person
+     * @param editPersonID  编辑记录编号
+     * @return
+     */
     @PutMapping("updatePerson")
-    public Result updatePerson(@RequestParam Person person) {
+    public Result updatePerson(@RequestParam Person person,@RequestParam Integer editPersonID,@RequestParam Integer managerID) {
+        SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date currentTime = simpleFormatter.parse(new Date().toString());
+            EditPersonHistory editPersonHistory = new EditPersonHistory(editPersonID, person, managerID, currentTime.toString());
+            editPersonHistoryService.save(editPersonHistory);
+        } catch (ParseException e) {
+            System.out.println("格式转换失败");
+            throw new RuntimeException(e);
+        }
+
         boolean flag = personService.updateById(person);
         if(flag) {
             return Result.ok();
