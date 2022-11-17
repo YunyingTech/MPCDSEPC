@@ -36,31 +36,21 @@ public class ApiAccountController {
         lambdaQueryWrapper.eq(Account::getUserName,map.get("username")).eq(Account::getPassWord,map.get("mm"));
         Account account = accountService.getOne(lambdaQueryWrapper);
         if(account == null){
-            return Result.fail("账号或密码错误");
+            return Result.build(StatusCodeUtil.LoginError,"账号或密码错误");
         }
-        return Result.ok(account);
+        return Result.build(StatusCodeUtil.LoginError,account);
+
     }
 
-    /**
-     * /mpcdsepc/api/account/select
-     * 根据 id Name Username TeleNum的顺序 只按照一个靠前的信息精准搜索一个用户
-     * @param account passed by browser.
-     * @return All accounts.
-     */
-    @PostMapping("select")
-    public Result select(@RequestBody Account account) {
-        System.out.println("select!!");     // TODO: After debug, then delete it.
-//        Account res;
-//        if (account.getId() != 0) {
-//            res = accountService.getAccountById(account.getId());
-//        } else if (!Objects.equals(account.getName(), "")) {
-//            res = accountService.getAccountByName(account.getName());
-//        } else if (!Objects.equals(account.getUserName(), "")) {
-//            res = accountService.getAccountByUserName(account.getUserName());
-//        } else {
-//            res = accountService.getAccountByTeleNum(account.getTeleNum());
-//        }
-        return Result.ok(account.getUserName());
+    @GetMapping("findById/{accountId}")
+    public Result select(@PathVariable int  accountId) {
+        LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(Account::getManagerId,accountId);
+        List<Account> list = accountService.list(lambdaQueryWrapper);
+        if (list.size() == 0) {
+            return Result.fail();
+        }
+        return Result.ok(list);
     }
 
     /**
@@ -78,12 +68,13 @@ public class ApiAccountController {
      * TODO: 这里需要识别合法token
      * @param account passed by browser.
      */
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequestMapping(value = "/updateAccount", method = RequestMethod.PUT)
     public Result update(Account account) {
-        System.out.println("update!!!");    // TODO: After debug, then delete it.
-
-        accountService.update(account,null);
-        return Result.ok();
+        boolean flag = accountService.updateById(account);
+        if (!flag) {
+            return Result.build(StatusCodeUtil.UpdateError,"更新失败");
+        }
+        return Result.build(StatusCodeUtil.UpdateSuccess,"更新失败");
     }
 
     @PostMapping("addAccount")
@@ -95,7 +86,7 @@ public class ApiAccountController {
         return Result.build(StatusCodeUtil.RegSuccess,"注册成功");
     }
 
-    @GetMapping("query/{role}")
+    @GetMapping("queryAccountByRole/{role}")
     public Result addAccount(@PathVariable int role){
         LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Account::getRole,role);
@@ -104,6 +95,15 @@ public class ApiAccountController {
             return Result.fail("无数据");
         }
         return Result.ok(list);
+    }
+
+    @DeleteMapping("delAccountById/{id}")
+    public Result delAccountById(int id){
+        boolean flag = accountService.removeById(id);
+        if (!flag) {
+            return Result.fail();
+        }
+        return Result.ok();
     }
 
     @PostMapping("logout")

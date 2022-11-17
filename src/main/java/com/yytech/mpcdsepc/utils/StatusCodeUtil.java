@@ -5,18 +5,18 @@ import java.util.Map;
 
 public class StatusCodeUtil {
     public static int OperationSuccess = 200;
-    public static int LoginSuccess = 201;
-    public static int DelSuccess = 202;
-    public static int RegSuccess = 203;
-    public static int UpdateSuccess = 204;
-    public static int UploadSuccess = 205;
-    public static int DelError = 402;
-    public static int RegError = 403;
-    public static int UpdateError = 404;
-    public static int UploadError = 405;
-    public static int LoginAccountIdError = 406;
-    public static int LoginAccountPwdError = 407;
-    public static int UnknownError = 409;
+    public static int OperationErr = 200;
+    public static int LoginSuccess = 20010;
+    public static int DelSuccess = 20020;
+    public static int RegSuccess = 20030;
+    public static int UpdateSuccess = 20040;
+    public static int UploadSuccess = 20050;
+    public static int DelError = 20021;
+    public static int RegError = 20031;
+    public static int UpdateError = 20041;
+    public static int UploadError = 20051;
+    public static int LoginError = 20011;
+    public static int UnknownError = 500;
 
 //    public static Map<String, String> statusCode = new HashMap<String, String>() {
 //        {
