@@ -11,6 +11,7 @@ import com.yytech.mpcdsepc.entity.Account;
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.impl.AccountServiceImpl;
+import com.yytech.mpcdsepc.service.impl.EditPersonHistoryServiceImpl;
 import com.yytech.mpcdsepc.utils.StatusCodeUtil;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,6 +72,7 @@ public class ApiAccountController {
      */
     @RequestMapping(value = "/updateAccount", method = RequestMethod.PUT)
     public Result update(@RequestBody Account account) {
+
         boolean flag = accountService.updateById(account);
         if (!flag) {
             return Result.build(StatusCodeUtil.UpdateError,"更新失败");

@@ -17,21 +17,17 @@ import lombok.ToString;
 @Setter
 @TableName("MPCDSEPC_PositiveSample")
 public class PositiveSample {
-    @TableId(type = IdType.NONE)
-    private String personId;
-    private String name;
-    private String phone;
-    private String district;
-    private String detailedAddress;
-    private String job;
-    private String comeFrom;
-    private String highRiskArea;
-    private String vaccine;
-    private String haveBeenInfected;
-    private String modeOfInfection;
-    private String samplingPoint;
-    private String samplingTime;
-    private String relationships;
-    private String diagnosisTime;
-    private String symptomType;
+    private Integer sampleID;
+    private String discoveryMethod;
+    private String DistrictEdit;
+    private String StreetEdit;
+    private String pointEdit;
+    private String samplingTypeEdit;
+    private Integer mixedCT;
+    private String mixTimeEdit;
+    private String riskElement;
+    private String testResultEdit;
+    private Integer singleCTEdit;
+    private String singleTestTimeEdit;
+    private String tubeID;
 }
