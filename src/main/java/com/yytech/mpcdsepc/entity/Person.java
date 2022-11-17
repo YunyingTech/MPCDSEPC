@@ -1,9 +1,6 @@
 package com.yytech.mpcdsepc.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
@@ -39,6 +36,9 @@ public class Person {
     private String diagnosisTime;
     private String symptomType;
     private String isLocked;
+    @TableField("ManagerID")
+    private int managerId;
+    @TableField(fill = FieldFill.INSERT)
     private Date deliverTime;
 }
 

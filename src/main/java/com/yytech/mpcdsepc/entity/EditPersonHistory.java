@@ -51,9 +51,9 @@ public class EditPersonHistory {
         this.detailedAddress=person.getDetailedAddress();
         this.job=person.getJob();
         this.comeFrom=person.getComeFrom();
-        this.highRiskArea=person.isHighRiskArea();
-        this.vaccine=person.isVaccine();
-        this.haveBeenInfected=person.isHaveBeenInfected();
+        this.highRiskArea=person.getHighRiskArea();
+        this.vaccine=person.getVaccine();
+        this.haveBeenInfected=person.getHaveBeenInfected();
         this.samplingPoint=person.getSamplingPoint();
         this.samplingTime=person.getSamplingTime();
     }

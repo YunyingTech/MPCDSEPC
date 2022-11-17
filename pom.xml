@@ -44,6 +44,7 @@
             <version>21.8</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/libs/aspose-cells-21.8.jar</systemPath>
+
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.aspose/aspose-words -->
         <dependency>
@@ -52,6 +53,7 @@
             <version>15.12.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/libs/aspose-words-15.12.0-jdk16.jar</systemPath>
+
         </dependency>
         <dependency>
             <groupId>com.itextpdf</groupId>
@@ -69,6 +71,21 @@
             <groupId>org.docx4j</groupId>
             <artifactId>docx4j</artifactId>
             <version>3.2.2</version>
+            <exclusions>
+                <!-- 去掉springboot默认配置,防止log4j2冲突 -->
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 
@@ -116,7 +133,6 @@
             <artifactId>thymeleaf-extras-java8time</artifactId>
         </dependency>
 
-        <!--  LOG4J2  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>

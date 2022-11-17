@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,25 +64,26 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
         titleRow.createCell(16).setCellValue("派发时间");
         //序号，默认为1
         int cell = 1;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat();;
         //遍历
         for (Person person : peoples) {
             //第一行保存的是每一列的列名
             //从第二行开始保存数据
             Row row = sheet.createRow(cell);
             //第一列 序号
-            row.createCell(0).setCellValue(cell);
+            row.createCell(0).setCellValue(person.getID());
             //将数据库的数据遍历出来
             //第二列 学号
-            row.createCell(1).setCellValue(person.getID());
+            row.createCell(1).setCellValue(person.getName());
             //第三列 姓名
-            row.createCell(2).setCellValue(person.getName());
+            row.createCell(2).setCellValue(person.getPhone());
             //第四列 身份证
-            row.createCell(3).setCellValue(person.getPhone());
-            row.createCell(4).setCellValue(person.getDistrict());
-            //第五列 年龄
+            row.createCell(3).setCellValue(person.getDistrict());
+            row.createCell(4).setCellValue(person.getDetailedAddress());
             row.createCell(5).setCellValue(person.getJob());
-            //第六列 地址
+            //第五列 年龄
             row.createCell(6).setCellValue(person.getComeFrom());
+            //第六列 地址
             row.createCell(7).setCellValue(person.getHighRiskArea());
             row.createCell(8).setCellValue(person.getVaccine());
             row.createCell(9).setCellValue(person.getHaveBeenInfected());
@@ -91,7 +93,8 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
             row.createCell(13).setCellValue(person.getSamplingTime());
             row.createCell(14).setCellValue(person.getDiagnosisTime());
             row.createCell(15).setCellValue(person.getSymptomType());
-            row.createCell(16).setCellValue(person.getDeliverTime());
+            row.createCell(16).setCellValue(simpleDateFormat.format(person.getDeliverTime()));
+            System.out.println("Time=====>" + simpleDateFormat.format(person.getDeliverTime()));
             //序号自增
             cell++;
         }
