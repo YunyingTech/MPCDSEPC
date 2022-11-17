@@ -42,6 +42,7 @@ public class ApiAccountController {
 
     }
 
+
     @GetMapping("findById/{accountId}")
     public Result select(@PathVariable int  accountId) {
         LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -69,12 +70,12 @@ public class ApiAccountController {
      * @param account passed by browser.
      */
     @RequestMapping(value = "/updateAccount", method = RequestMethod.PUT)
-    public Result update(Account account) {
+    public Result update(@RequestBody Account account) {
         boolean flag = accountService.updateById(account);
         if (!flag) {
             return Result.build(StatusCodeUtil.UpdateError,"更新失败");
         }
-        return Result.build(StatusCodeUtil.UpdateSuccess,"更新失败");
+        return Result.build(StatusCodeUtil.UpdateSuccess,"更新成功");
     }
 
     @PostMapping("addAccount")
