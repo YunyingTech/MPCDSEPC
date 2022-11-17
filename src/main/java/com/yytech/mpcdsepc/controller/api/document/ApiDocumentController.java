@@ -17,10 +17,8 @@ import org.apache.commons.collections4.Get;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -191,5 +189,59 @@ public class ApiDocumentController {
         }
         wrapper.eq("receiveStatus", "0");
         return Result.ok(personService.count(wrapper));
+    }
+
+    /**
+     * 获取当天已处理数量
+     *
+     * @param district district区，留空时为所有区
+     * @return
+     */
+    @GetMapping("/getReceivedNum")
+    public Result getReceivedNum(String district) {
+        int receivedNum = 0;
+        QueryWrapper<Person> wrapper = Wrappers.query();
+        if (!"".equals(district)) {
+            wrapper.eq("district", district);
+        }
+        wrapper.eq("receiveStatus", "1");
+        wrapper.isNotNull("deliverTime");
+        List<Person> personList = personService.list(wrapper);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date dataNow = new Date();
+        simpleDateFormat.format(dataNow);
+        for (Person person : personList) {
+            if (dataNow.getDay() == person.getDeliverTime().getDay()) {
+                receivedNum++;
+            }
+        }
+        return Result.ok(receivedNum);
+    }
+
+    /**
+     * 获取纠纷数量
+     *
+     * @param district district区，留空时为所有区
+     * @return
+     */
+    @GetMapping("getDisputeNum")
+    public Result getDisputeNum(String district) {
+        int disputeNum = 0;
+        QueryWrapper<Person> wrapper = Wrappers.query();
+        if (!"".equals(district)) {
+            wrapper.eq("district", district);
+        }
+        wrapper.eq("receiveStatus", "0");
+        wrapper.isNotNull("deliverTime");
+        List<Person> personList = personService.list(wrapper);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date dataNow = new Date();
+        simpleDateFormat.format(dataNow);
+        for (Person person : personList) {
+            if (dataNow.getTime() - person.getDeliverTime().getTime() > 900000) {
+                disputeNum++;
+            }
+        }
+        return Result.ok(disputeNum);
     }
 }
