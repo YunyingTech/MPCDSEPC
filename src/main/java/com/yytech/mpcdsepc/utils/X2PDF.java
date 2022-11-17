@@ -140,10 +140,3 @@ public class X2PDF {
         return result;
     }
 }
-
-class Test{
-    public static void main(String[] args) throws FileNotFoundException {
-//        X2PDF.wordToPdf("testWord2Pdf.docx","E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\","E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\","docx");
-        X2PDF.xlsxToPdf("testExcelToPdf.xlsx","E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\","E:\\code\\MPCDSEPC\\src\\main\\resources\\upload\\","xlsx");
-    }
-}

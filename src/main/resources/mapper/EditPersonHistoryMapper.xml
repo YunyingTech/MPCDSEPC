@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yytech.mpcdsepc.mapper.EditPersonHistory">
+    <!--  映射表  -->
+
+    <select id="getHistoryByPersonID" resultType="EditPersonHistory">
+        select * from mpcdsepc.MPCDSEPC_EditPersonHistory where PersonID = #{personID}
+    </select>
+
+
+    <!--  用户信息修改  -->
+    <update id="updateAccount" parameterType="Account">
+        update mpcdsepc.accounts
+        set passWord = #{passWord}, name = #{name}, role = #{role}, gentle = #{gentle}, teleNum = #{teleNum}, isOnline = #{isOnline}
+        where id = #{id}
+    </update>
+    <!--  删除用户  -->
+    <delete id="deleteAccount" parameterType="int">
+        delete from mpcdsepc.accounts where id = #{id}
+    </delete>
+    <!--    插入用户-->
+    <insert id="insertAccount" parameterType="Account">
+        insert into mpcdsepc.accounts values (#{id}, #{userName}, #{role}, #{gentle}, #{passWord}, #{name}, #{createDate}, #{telNum}, #{isOnline});
+    </insert>
+</mapper>

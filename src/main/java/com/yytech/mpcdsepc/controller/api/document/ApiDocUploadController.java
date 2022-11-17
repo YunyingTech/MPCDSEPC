@@ -4,19 +4,11 @@
  * @Description: 上传文件
  **/
 package com.yytech.mpcdsepc.controller.api.document;
-import com.yytech.mpcdsepc.utils.X2PDF;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import static com.yytech.mpcdsepc.utils.X2PDF.wordToPdf;
-import static com.yytech.mpcdsepc.utils.X2PDF.xlsxToPdf;
+import java.io.*;
 
 @RestController
 @RequestMapping("/mpcdsepc/api/document")
@@ -73,49 +65,5 @@ public class ApiDocUploadController {
         }
 
         return "ok";
-    }
-
-
-    @RequestMapping(path = "/previewFile")
-    public String preview(@RequestParam(required = true)String path, @RequestParam(required = true)String fileName, @RequestParam(required = true)String suffix) throws Exception {
-        // 读取pdf文件的路径
-        String pdfPath = "";
-        // 将对应的后缀转换成小写
-        String lastSuffix = suffix.toLowerCase();
-        //读取文件内容,获取文件存储的路径
-        String orgPath = "";
-        if (lastSuffix.equals(".xls") || lastSuffix.equals(".xlsx")) {
-            orgPath = "upload/excels/";
-        } else if (lastSuffix.equals(".doc") || lastSuffix.equals(".docx")) {
-            orgPath = "upload/words/";
-        } else {
-            //返回错误 文档类型错误
-            return "409";
-        }
-
-        // 生成pdf文件的路径
-        String toPath = "upload/pdfs/";
-        // 判断对应的pdf是否存在，不存在则创建
-        File folder = new File(toPath);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-
-        // 转换之后的pdf文件
-        String newName = fileName.replace(lastSuffix, "pdf");
-        ;
-        File newFile = new File(toPath + "/" + newName);
-        // 如果转换之后的文件夹中有转换后的pdf文件，则直接从里面读取即可
-        if (newFile.exists()) {
-            pdfPath = toPath + "/" + newName;
-        } else if (lastSuffix.equals("doc") || lastSuffix.equals("docx")) {
-            pdfPath = X2PDF.wordToPdf(fileName, orgPath, toPath, lastSuffix);
-        } else if (lastSuffix.equals("xls") || lastSuffix.equals("xlsx")) {
-            pdfPath = X2PDF.xlsxToPdf(fileName, orgPath, toPath, lastSuffix);
-        } else {
-            return "409";
-        }
-
-        return pdfPath;
     }
 }
