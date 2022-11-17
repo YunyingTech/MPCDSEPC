@@ -27,10 +27,10 @@ public class Person {
     private String detailedAddress;
     private String job;              // 职业
     private String comeFrom;         // 从哪来
-    private boolean highRiskArea;    // 近期是否去过中高风险，接触阳性人员，到访重点场所
-    private boolean vaccine;         // 新冠疫苗接种情况
-    private boolean haveBeenInfected;          // 是否感染过新冠
-    private boolean receiveStatus;   // 接收情况
+    private Boolean highRiskArea;    // 近期是否去过中高风险，接触阳性人员，到访重点场所
+    private Boolean vaccine;         // 新冠疫苗接种情况
+    private Boolean haveBeenInfected;          // 是否感染过新冠
+    private Boolean receiveStatus;   // 接收情况
     private String ModeOfInfection;
     private String samplingPoint;    // 采样点
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

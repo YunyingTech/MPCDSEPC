@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -97,6 +98,11 @@ public class ApiPersonController {
         } else {
             return Result.build(400,"delete failed");
         }
+    }
+
+    @GetMapping("/exportData/{id}")
+    public void exportData(HttpServletResponse response,@PathVariable String id){
+        personService.exportData(response,id);
     }
 
 
