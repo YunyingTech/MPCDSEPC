@@ -7,11 +7,13 @@ package com.yytech.mpcdsepc.controller.api.account;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.yytech.mpcdsepc.entity.Account;
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.impl.AccountServiceImpl;
 import com.yytech.mpcdsepc.utils.StatusCodeUtil;
+import com.yytech.mpcdsepc.utils.TencentMsgUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -71,6 +73,7 @@ public class ApiAccountController {
      */
     @RequestMapping(value = "/updateAccount", method = RequestMethod.PUT)
     public Result update(@RequestBody Account account) {
+        System.out.println(account);
         boolean flag = accountService.updateById(account);
         if (!flag) {
             return Result.build(StatusCodeUtil.UpdateError,"更新失败");
@@ -98,8 +101,19 @@ public class ApiAccountController {
         return Result.ok(list);
     }
 
+    @PostMapping("sendMsg/{PhoneNum}/{name}")
+    public Result sendMsg(@PathVariable String PhoneNum,
+                          @PathVariable String name) throws TencentCloudSDKException {
+        boolean flag = TencentMsgUtils.sendMsg(PhoneNum, name);
+        if (!flag) {
+            return Result.fail();
+        }
+        return Result.ok();
+    }
+
+
     @DeleteMapping("delAccountById/{id}")
-    public Result delAccountById(int id){
+    public Result delAccountById(@PathVariable int id){
         boolean flag = accountService.removeById(id);
         if (!flag) {
             return Result.fail();

@@ -1,8 +1,10 @@
 package com.yytech.mpcdsepc;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.yytech.mpcdsepc.entity.Account;
 import com.yytech.mpcdsepc.service.AccountService;
+import com.yytech.mpcdsepc.utils.TencentMsgUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,10 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
     private AccountService accountService;
 
     @Test
-    void name() {
-        LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Account::getUserName,"Doge").eq(Account::getPassWord,"666");
-        Account account = accountService.getOne(lambdaQueryWrapper);
-        System.out.println(account);
+    void name() throws TencentCloudSDKException {
+        TencentMsgUtils.sendMsg("17311637630","11111");
     }
 }
