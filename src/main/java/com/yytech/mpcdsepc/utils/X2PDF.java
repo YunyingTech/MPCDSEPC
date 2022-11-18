@@ -11,8 +11,13 @@ import java.io.*;
 public class X2PDF {
     public static String wordToPdf(String fileName,String orgPath,String toPath,String lastSuffix) throws FileNotFoundException {
         String targetFile = fileName.replace(lastSuffix,"pdf");
+        System.out.println(targetFile);
+        System.out.println("infile:"+orgPath+fileName);
         FileInputStream inFile = new FileInputStream(orgPath + fileName);
+//        FileInputStream inFile = new FileInputStream("E:\\code\\newbranch\\MPCDSEPC\\src\\main\\resources\\upload\\words\\testWord2Pdf.docx");
+        System.out.println("outfile:"+toPath+targetFile);
         FileOutputStream outFile = new FileOutputStream(toPath + targetFile);
+//        FileOutputStream outFile = new FileOutputStream("E:\\code\\newbranch\\MPCDSEPC\\src\\main\\resources\\upload\\pdfs\\"+targetFile);
 
         // 验证License 若不验证则转化出的pdf文档会有水印产生
 //        if (!getLicense()) {

@@ -96,6 +96,7 @@ public class ApiPersonController {
      */
     @PutMapping("updatePerson")
     public Result updatePerson(@RequestParam Person person,@RequestParam Integer editPersonID,@RequestParam Integer managerID) {
+        // 编辑操作日志记录 传入参数 编辑编号 编辑者id person
         SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date currentTime = simpleFormatter.parse(new Date().toString());

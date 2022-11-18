@@ -115,6 +115,7 @@ public class ApiDocumentController {
      */
     @PostMapping("/updateTube")
     public Result updateTube(@RequestBody Tube tube, @RequestBody PositiveSample positiveSample,@RequestBody Integer editSampleId,@RequestBody Integer managerId) {
+        // 编辑操作日志记录 传入参数编辑编号 编辑者id tube positiveSample（可为空）
         SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date currentTime = simpleFormatter.parse(new Date().toString());
