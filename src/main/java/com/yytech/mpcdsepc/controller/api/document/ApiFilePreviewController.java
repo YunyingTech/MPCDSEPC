@@ -23,7 +23,7 @@ public class ApiFilePreviewController {
 //        String uploadPath = "src/main/resources/upload/";
         String fileName = filePath.substring(filePath.lastIndexOf("/")+1);
         String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
-        String uploadPath = filePath.replace(fileName,"");
+        String uploadPath = filePath.replace(fileName,"").replace("words/","").replace("excels/","");
 
         String pdfPath = "";
 
