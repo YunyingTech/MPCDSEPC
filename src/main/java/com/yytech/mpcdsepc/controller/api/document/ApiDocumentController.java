@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yytech.mpcdsepc.entity.*;
 import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.CorrespondTPService;
@@ -150,15 +151,31 @@ public class ApiDocumentController {
         return Result.ok(tubeService.list());
     }
 
-    @GetMapping("getTubePersons/{id}")
-    public Result getTubePersons(@PathVariable String id){
+    @GetMapping("getTubePersons/{id}/{currentPage}/{size}")
+    public Result getTubePersons(@PathVariable String id,
+                                 @PathVariable int currentPage,
+                                 @PathVariable int size){
         LambdaQueryWrapper<CorrespondTP> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(CorrespondTP::getTubeId,id);
         List<CorrespondTP> list = correspondTPService.list(lambdaQueryWrapper);
         List<String> personIds = list.stream().map(i -> i.getPersonId()).collect(Collectors.toList());
-        List<Person> people = personService.listByIds(personIds);
+        List<Person> peoples = personService.listByIds(personIds);
+        Page<Person> page = new Page<>(currentPage,size);
+        int count = peoples.size();
+        List<Person> pageList = new ArrayList<>();
+//计算当前页第一条数据的下标
+        int currId = currentPage>1 ? (currentPage-1)*size:0;
+        for (int i=0; i<size && i<count - currId;i++){
+            pageList.add(peoples.get(currId+i));
+        }
+        page.setSize(size);
+        page.setCurrent(currentPage);
+        page.setTotal(count);
+//计算分页总页数
+        page.setPages(count %10 == 0 ? count/10 :count/10+1);
+        page.setRecords(pageList);
         //DO NOT CHANGE IT AGAIN
-        return Result.ok(people);
+        return Result.ok(page);
     }
 
     /**
