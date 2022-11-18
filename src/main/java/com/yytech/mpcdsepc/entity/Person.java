@@ -40,5 +40,6 @@ public class Person {
     private int managerId;
     @TableField(fill = FieldFill.INSERT)
     private Date deliverTime;
+    private int backFrequency;
 }
 
