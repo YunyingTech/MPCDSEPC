@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -126,7 +127,7 @@ public class ApiPersonController {
     }
 
     @GetMapping("/exportData/{id}")
-    public void exportData(HttpServletResponse response,@PathVariable String id){
+    public void exportData(HttpServletResponse response,@PathVariable String id) throws FileNotFoundException {
         personService.exportData(response,id);
     }
 

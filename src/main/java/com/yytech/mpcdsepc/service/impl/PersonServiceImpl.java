@@ -1,5 +1,7 @@
 package com.yytech.mpcdsepc.service.impl;
 
+import com.aspose.cells.PdfSaveOptions;
+import com.aspose.cells.Workbook;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yytech.mpcdsepc.entity.CorrespondTP;
@@ -7,16 +9,16 @@ import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.mapper.PersonMapper;
 import com.yytech.mpcdsepc.service.CorrespondTPService;
 import com.yytech.mpcdsepc.service.PersonService;
+import com.yytech.mpcdsepc.utils.X2PDF;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -28,7 +30,7 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
     private CorrespondTPService correspondTPService;
 
     @Override
-    public XSSFWorkbook exportData(HttpServletResponse response, String id) {
+    public XSSFWorkbook exportData(HttpServletResponse response, String id) throws FileNotFoundException {
         LambdaQueryWrapper<CorrespondTP> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(CorrespondTP::getTubeId,id);
         List<CorrespondTP> list = correspondTPService.list(lambdaQueryWrapper);
@@ -99,25 +101,37 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
             cell++;
         }
         //设置文档名称，这儿写死了，也可以前端传输（前端传一个文件名到后端就行）
-        String fileName = "test.xlsx";
-        OutputStream outputStream = null;
+        String fileName = "test.pdf";
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ServletOutputStream fileOS = null;
         try {
             //文件名编码格式
             fileName = URLEncoder.encode(fileName, "UTF-8");
             //设置ContentType请求信息格式
-            response.setContentType("application/vnd.ms-excel");
+            response.setContentType("application/pdf");
             //设置标头
             response.setHeader("Content-disposition", "attachment;filename=" + fileName);
-            outputStream = response.getOutputStream();
+            fileOS = response.getOutputStream();
             wb.write(outputStream);
+            byte[] bytes = outputStream.toByteArray();
+            InputStream inputStream = new ByteArrayInputStream(bytes);
+//            Workbook inputExcel = new Workbook(inputStream);
+//            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+//            pdfSaveOptions.setOnePagePerSheet(true);
+//            inputExcel.save(fileOS,pdfSaveOptions);
+            X2PDF.xlsxToPdf(inputStream,fileOS);
+
+            System.out.println("convert success");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
                 outputStream.flush();
                 outputStream.close();
+                fileOS.flush();
+                fileOS.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

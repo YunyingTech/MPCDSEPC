@@ -1,5 +1,7 @@
 package com.yytech.mpcdsepc.utils;
 
+import com.aspose.cells.PdfSaveOptions;
+import com.aspose.cells.Workbook;
 import com.aspose.words.License;
 import com.aspose.words.SaveFormat;
 
@@ -48,19 +50,16 @@ public class X2PDF {
         return toPath+targetFile;
     }
 
-    public static String xlsxToPdf(String fileName,String orgPath,String toPath,String lastSuffix) throws FileNotFoundException {
-        String targetFile = fileName.replace(lastSuffix,"pdf");
-        FileInputStream inputStream = new FileInputStream(orgPath + fileName);
-        FileOutputStream outputStream = new FileOutputStream(toPath + targetFile);
+    public static int xlsxToPdf(InputStream excelInput,OutputStream pdfOutPut) throws FileNotFoundException {
 
         // 验证License 若不验证则转化出的pdf文档会有水印产生
         if (!getExeclLicense()) {
-            return "409";
+            return 409;
         }
         try {
-            com.aspose.cells.Workbook wb = new com.aspose.cells.Workbook(inputStream);// 原始excel路径
+            Workbook wb = new Workbook(excelInput);// 原始excel路径
 
-            com.aspose.cells.PdfSaveOptions pdfSaveOptions = new com.aspose.cells.PdfSaveOptions();
+            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
             pdfSaveOptions.setOnePagePerSheet(false);
 
 
@@ -71,16 +70,16 @@ public class X2PDF {
             int[] showSheets={0};
             //隐藏workbook中不需要的sheet页。
             printSheetPage(wb,showSheets);
-            wb.save(outputStream, pdfSaveOptions);
-            outputStream.flush();
-            outputStream.close();
+            wb.save(pdfOutPut, pdfSaveOptions);
+            pdfOutPut.flush();
+            pdfOutPut.close();
             System.out.println("excel转换完毕");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return toPath+targetFile;
+        return 200;
     }
 
     /**
