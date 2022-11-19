@@ -7,7 +7,9 @@ package com.yytech.mpcdsepc.controller.api.workorder;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.yytech.mpcdsepc.entity.Account;
 import com.yytech.mpcdsepc.entity.Person;
+import com.yytech.mpcdsepc.mapper.AccountMapper;
 import com.yytech.mpcdsepc.mapper.PersonMapper;
 import com.yytech.mpcdsepc.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class ApiDistributionController {
 
     @Autowired
     private PersonMapper personMapper;
+    @Autowired
+    private AccountMapper accountMapper;
 
     /**
      * 派发一个工单
@@ -32,8 +36,19 @@ public class ApiDistributionController {
     @PostMapping("/sendOrder")
     public Result sendOrder(@RequestBody Map<String,String> json) {
         Person p = personMapper.selectById(json.get("PersonId"));
+        Account self = accountMapper.selectById(json.get("ManagerId"));
+        Account to = accountMapper.selectById(json.get("toManagerId"));
         if(p == null) {
             return Result.fail("No person found");
+        }
+        if(self == null) {
+            return Result.fail("Can't find myself");
+        }
+        if(to == null) {
+            return Result.fail("Can't find the target");
+        }
+        if(self.getRole() < to.getRole()) {
+            return Result.fail("Not a correct role");
         }
         p.setManagerId(Integer.parseInt(json.get("ManagerId")));        // 注意: 这里的ManagerId应当是派发一方的Id
         p.setReceiveStatus(false);
