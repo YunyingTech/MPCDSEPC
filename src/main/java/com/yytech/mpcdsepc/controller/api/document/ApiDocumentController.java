@@ -152,15 +152,16 @@ public class ApiDocumentController {
         return Result.ok(tubeService.list());
     }
 
-    @GetMapping("getTubePersons/{id}/{currentPage}/{size}")
-    public Result getTubePersons(@PathVariable String id,
+    @GetMapping("getTubePersons/{tubeId}/{managerId}/{currentPage}/{size}")
+    public Result getTubePersons(@PathVariable String tubeId,
+                                 @PathVariable int managerId,
                                  @PathVariable int currentPage,
                                  @PathVariable int size){
         LambdaQueryWrapper<CorrespondTP> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(CorrespondTP::getTubeId,id);
+        lambdaQueryWrapper.eq(CorrespondTP::getTubeId,tubeId);
         List<CorrespondTP> list = correspondTPService.list(lambdaQueryWrapper);
         List<String> personIds = list.stream().map(i -> i.getPersonId()).collect(Collectors.toList());
-        List<Person> peoples = personService.listByIds(personIds);
+        List<Person> peoples = personService.listByIds(personIds).stream().filter(i -> i.getReceiveStatus().booleanValue() == true && i.getManagerId() == managerId).collect(Collectors.toList());
         Page<Person> page = new Page<>(currentPage,size);
         int count = peoples.size();
         List<Person> pageList = new ArrayList<>();

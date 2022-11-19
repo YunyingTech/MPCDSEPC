@@ -116,10 +116,13 @@ public class ApiPersonController {
         }
     }
 
-    @DeleteMapping("deletePersonById")
-    public Result deletePersonById(@RequestParam int id) {
-        boolean flag = personService.removeById(id);
-        if(flag) {
+    @DeleteMapping("deletePersonById/{id}")
+    public Result deletePersonById(@PathVariable int id) {
+        LambdaQueryWrapper<CorrespondTP> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(CorrespondTP::getPersonId,id);
+        boolean flag1 = correspondTPService.remove(lambdaQueryWrapper);
+        boolean flag2 = personService.removeById(id);
+        if(flag1 && flag2) {
             return Result.ok();
         } else {
             return Result.build(400,"delete failed");
