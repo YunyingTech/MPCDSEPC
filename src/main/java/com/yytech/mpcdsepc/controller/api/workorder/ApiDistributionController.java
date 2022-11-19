@@ -5,15 +5,13 @@
  **/
 package com.yytech.mpcdsepc.controller.api.workorder;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.mapper.PersonMapper;
 import com.yytech.mpcdsepc.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -49,7 +47,7 @@ public class ApiDistributionController {
     /**
      * 被派发工单的员工进行工单拒收
      */
-    @PostMapping("/reject")
+    @PutMapping("/reject")
     public Result reject(@RequestBody Map<String, String> json) {
         Person p = personMapper.selectById(json.get("PersonId"));
         p.setReceiveStatus(false);
@@ -61,7 +59,7 @@ public class ApiDistributionController {
     /**
      * 被派发工单的员工进行工单接受
      */
-    @PostMapping("/accept")
+    @PutMapping("/accept")
     public Result accept(@RequestBody Map<String, String> json) {
         Person p = personMapper.selectById(json.get("PersonId"));
         p.setReceiveStatus(true);
@@ -73,21 +71,21 @@ public class ApiDistributionController {
 
     /**
      * 通过员工 id 查询自己有多少工单
-     * @param json
+     * @param managerId
      * @return
      */
-    @PostMapping("/getWorkOrdersById")
-    public Result getWorkOrdersById(@RequestBody Map<String, String> json) {
+    @GetMapping("/getWorkOrdersById/{managerId}")
+    public Result getWorkOrdersById(@PathVariable String managerId) {
         Map<String, Object> search = new HashMap<>();
-        search.put("ManagerID",json.get("ManagerId"));
+        search.put("ManagerID",managerId);
         return Result.ok(personMapper.selectByMap(search));
     }
 
-    @PostMapping("/getWorkOrderNumById")
-    public Result getWorkOrderNumById(@RequestBody Map<String, String> json) {
-        Map<String, Object> search = new HashMap<>();
-        search.put("ManagerID",json.get("ManagerId"));
-        return Result.ok(personMapper.selectByMap(search).size());
+    @GetMapping("/getWorkOrderNumById/{managerId}")
+    public Result getWorkOrderNumById(@PathVariable String managerId) {
+        LambdaQueryWrapper<Person> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Person::getManagerId,managerId);
+        return Result.ok(personMapper.selectCount(lambdaQueryWrapper));
     }
 
 
