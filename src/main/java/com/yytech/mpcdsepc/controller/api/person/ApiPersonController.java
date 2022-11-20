@@ -12,6 +12,7 @@ import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.CorrespondTPService;
 import com.yytech.mpcdsepc.service.PersonService;
 import com.yytech.mpcdsepc.service.impl.EditPersonHistoryServiceImpl;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -117,7 +118,7 @@ public class ApiPersonController {
     }
 
     @DeleteMapping("deletePersonById/{id}")
-    public Result deletePersonById(@PathVariable int id) {
+    public Result deletePersonById(@PathVariable String id) {
         LambdaQueryWrapper<CorrespondTP> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(CorrespondTP::getPersonId,id);
         boolean flag1 = correspondTPService.remove(lambdaQueryWrapper);
@@ -129,9 +130,14 @@ public class ApiPersonController {
         }
     }
 
-    @GetMapping("/exportData/{id}")
-    public void exportData(HttpServletResponse response,@PathVariable String id) throws FileNotFoundException {
-        personService.exportData(response,id);
+    @GetMapping("/exportData/{tubeId}/{managerId}")
+    public Result exportData(HttpServletResponse response,@PathVariable String tubeId,@PathVariable int managerId) throws FileNotFoundException {
+        XSSFWorkbook sheets = personService.exportData(response, tubeId, managerId);
+        if (sheets == null) {
+            response.setStatus(201);
+            return Result.fail();
+        }
+        return Result.ok();
     }
 
 

@@ -161,7 +161,13 @@ public class ApiDocumentController {
         lambdaQueryWrapper.eq(CorrespondTP::getTubeId,tubeId);
         List<CorrespondTP> list = correspondTPService.list(lambdaQueryWrapper);
         List<String> personIds = list.stream().map(i -> i.getPersonId()).collect(Collectors.toList());
+        if (personIds.size() == 0) {
+            return Result.fail("无数据");
+        }
         List<Person> peoples = personService.listByIds(personIds).stream().filter(i -> i.getReceiveStatus().booleanValue() == true && i.getManagerId() == managerId).collect(Collectors.toList());
+        if (peoples.size() == 0) {
+            return Result.fail("无数据");
+        }
         Page<Person> page = new Page<>(currentPage,size);
         int count = peoples.size();
         List<Person> pageList = new ArrayList<>();

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yytech.mpcdsepc.entity.CorrespondTP;
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.mapper.PersonMapper;
+import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.CorrespondTPService;
 import com.yytech.mpcdsepc.service.PersonService;
 import com.yytech.mpcdsepc.utils.X2PDF;
@@ -30,12 +31,18 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
     private CorrespondTPService correspondTPService;
 
     @Override
-    public XSSFWorkbook exportData(HttpServletResponse response, String id) throws FileNotFoundException {
+    public XSSFWorkbook exportData(HttpServletResponse response, String tubeId,int managerId) throws FileNotFoundException {
         LambdaQueryWrapper<CorrespondTP> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(CorrespondTP::getTubeId,id);
+        lambdaQueryWrapper.eq(CorrespondTP::getTubeId,tubeId);
         List<CorrespondTP> list = correspondTPService.list(lambdaQueryWrapper);
         List<String> personIds = list.stream().map(i -> i.getPersonId()).collect(Collectors.toList());
-        List<Person> peoples = this.listByIds(personIds);
+        if (personIds.size() == 0) {
+            return null;
+        }
+        List<Person> peoples = listByIds(personIds).stream().filter(i -> i.getReceiveStatus().booleanValue() == true && i.getManagerId() == managerId).collect(Collectors.toList());
+        if (peoples.size() == 0) {
+            return null;
+        }
         XSSFWorkbook wb = new XSSFWorkbook();
         //创建一张表
         Sheet sheet = wb.createSheet("Student");
