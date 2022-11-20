@@ -96,40 +96,27 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
             row.createCell(14).setCellValue(person.getDiagnosisTime());
             row.createCell(15).setCellValue(person.getSymptomType());
             row.createCell(16).setCellValue(simpleDateFormat.format(person.getDeliverTime()));
-            System.out.println("Time=====>" + simpleDateFormat.format(person.getDeliverTime()));
             //序号自增
             cell++;
         }
         //设置文档名称，这儿写死了，也可以前端传输（前端传一个文件名到后端就行）
-        String fileName = "test.pdf";
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        String fileName = "test.xls";
         ServletOutputStream fileOS = null;
         try {
             //文件名编码格式
             fileName = URLEncoder.encode(fileName, "UTF-8");
             //设置ContentType请求信息格式
-            response.setContentType("application/pdf");
+            response.setContentType("application/vnd.ms-excel");
             //设置标头
             response.setHeader("Content-disposition", "attachment;filename=" + fileName);
             fileOS = response.getOutputStream();
-            wb.write(outputStream);
-            byte[] bytes = outputStream.toByteArray();
-            InputStream inputStream = new ByteArrayInputStream(bytes);
-//            Workbook inputExcel = new Workbook(inputStream);
-//            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
-//            pdfSaveOptions.setOnePagePerSheet(true);
-//            inputExcel.save(fileOS,pdfSaveOptions);
-            X2PDF.xlsxToPdf(inputStream,fileOS);
-
-            System.out.println("convert success");
+            wb.write(fileOS);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
-                outputStream.flush();
-                outputStream.close();
                 fileOS.flush();
                 fileOS.close();
             } catch (IOException e) {
