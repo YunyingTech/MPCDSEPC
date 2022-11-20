@@ -14,7 +14,10 @@ import org.apache.ibatis.javassist.CtMethod;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
  class MpcdApplication {
@@ -25,8 +28,14 @@ import org.springframework.web.multipart.MultipartFile;
     @Autowired
     private PersonService personService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Test
     void name() throws TencentCloudSDKException {
+//       redisTemplate.opsForValue().set("1","1",30, TimeUnit.MINUTES);
+//       Long expire = redisTemplate.getExpire("1", TimeUnit.MINUTES);
+//       System.out.println(redisTemplate.opsForValue().get(38de9));
 
     }
 }

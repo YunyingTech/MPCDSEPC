@@ -98,10 +98,14 @@ public class TestWebSocket {
             editDocumentMap.remove(userId);
             LambdaUpdateWrapper<Person> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
             lambdaUpdateWrapper.set(Person::getIsLocked,"0").eq(Person::getID,jsonObject.get("personId").toString());
+            if (jsonObject.get("data") == null) {
+                boolean update = personService.update(lambdaUpdateWrapper);
+                System.out.println(update);
+                return;
+            }
             Person p = JSON.parseObject(jsonObject.get("data").toString(), Person.class);
             p.setIsLocked("0");
-            boolean flag = personService.updateById(p);
-            System.out.println(flag);
+            personService.updateById(p);
             this.sendAllMessage(Message.build("updateDocument",null));
             return;
         }

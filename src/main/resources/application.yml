@@ -39,10 +39,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
   redis:
-    host: ncld.nwu.edu.cn
+    host: 162.14.110.70
     port: 6379
-    database: 1 #请勿修改
-    password: 20020602mM
+    password: lhz20021215
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
