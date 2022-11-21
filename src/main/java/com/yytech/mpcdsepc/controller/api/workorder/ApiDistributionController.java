@@ -49,10 +49,10 @@ public class ApiDistributionController {
             return Result.fail("Can't find myself");
         }
         if(to == null) {
-            return Result.fail("Can't find the target");
+            return Result.fail("找不到这个人");
         }
-        if(self.getRole() < to.getRole()) {
-            return Result.fail("Not a correct role");
+        if(self.getRole() > to.getRole()) {
+            return Result.fail("禁止越级发送");
         }
         String key = UUID.randomUUID().toString().substring(0,6);
         PersonVo personVo = new PersonVo();

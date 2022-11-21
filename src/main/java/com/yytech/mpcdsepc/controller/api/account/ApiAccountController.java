@@ -46,7 +46,7 @@ public class ApiAccountController {
         if(account == null){
             return Result.build(StatusCodeUtil.LoginError,"账号或密码错误");
         }
-        return Result.build(StatusCodeUtil.LoginError,account);
+        return Result.build(StatusCodeUtil.LoginSuccess,account);
 
     }
 
