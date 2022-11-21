@@ -115,6 +115,10 @@ public class ApiDistributionController {
         List range = redisTemplate.opsForList().range(managerId, 0, -1);
         List<PersonVo> collect = (List<PersonVo>) range.stream().map(i -> {
             PersonVo personVo = (PersonVo) redisTemplate.opsForValue().get(i);
+            if (personVo == null) {
+                redisTemplate.opsForList().remove(managerId,0,i);
+                return null;
+            }
             Long expire = redisTemplate.getExpire(personVo.getKey(), TimeUnit.MINUTES);
             personVo.setExpireTime(expire);
             return personVo;
