@@ -67,7 +67,7 @@ public class ApiDistributionController {
         UpdateWrapper<Person> wrapper = new UpdateWrapper<>();
         wrapper.eq("PersonID",json.get("PersonId")).set("receiveStatus","0");
         int update = personMapper.update(p, wrapper);
-        redisTemplate.opsForValue().set(json.get("PersonId"),personVo,30, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(json.get("PersonId"),personVo,30, TimeUnit.MINUTES);
         redisTemplate.opsForList().leftPush(json.get("toManagerId"),json.get("PersonId"));
         return Result.ok("Order send done");
     }
