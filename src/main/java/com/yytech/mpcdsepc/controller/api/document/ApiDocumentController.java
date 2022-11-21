@@ -9,15 +9,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yytech.mpcdsepc.entity.*;
 import com.yytech.mpcdsepc.result.Result;
-import com.yytech.mpcdsepc.service.CorrespondTPService;
-import com.yytech.mpcdsepc.service.EditSampleHistoryService;
-import com.yytech.mpcdsepc.service.PersonService;
-import com.yytech.mpcdsepc.service.TubeService;
+import com.yytech.mpcdsepc.service.*;
 import org.apache.commons.collections4.Get;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -37,42 +35,13 @@ public class ApiDocumentController {
     @Autowired
     private PersonService personService;
 
+    @Autowired
+    private AccountService accountService;
+
     @Resource
     private EditSampleHistoryService editSampleHistoryService;
 
-    /**
-     * 是否被锁
-     * @param map
-     * @return
-     * @throws JSONException
-     */
-//    @RequestMapping(value = "/isLockData", produces = {"application/json"}, method = RequestMethod.POST)
-//    public boolean isLockData(@RequestBody Map<String,String> map) throws JSONException {
-//        return LockUtil.isLockDataUtil(map.get("tubeId") + map.get("personId"));
-//    }
 
-    /**
-     * 加入锁
-     * @param map
-     * @return
-     */
-//    @RequestMapping(value = "/lockData", produces = {"application/json"}, method = RequestMethod.POST)
-//    public String lockData(@RequestBody Map<String,String> map) {
-//        LockUtil.lockDataUtil(map.get("tubeId"), map.get("personId"), map.get("accountId"));
-//        return "ok";
-//    }
-
-    /**
-     * 删除锁
-     * @param map
-     * @return
-     * @throws JSONException
-     */
-//    @RequestMapping(value = "/unLockData", produces = {"application/json"}, method = RequestMethod.POST)
-//    public String unLock(@RequestBody Map<String,String> map) throws JSONException {
-//        LockUtil.unLockDataUtil(map.get("tubeId") + map.get("personId"));
-//        return "ok";
-//    }
 
     /**
      * 删除混管信息
@@ -147,10 +116,7 @@ public class ApiDocumentController {
 //        return Result.fail("获取试管失败");
 //    }
 
-    @GetMapping("getAlltubes")
-    public Result getAllTubes(){
-        return Result.ok(tubeService.list());
-    }
+
 
     @GetMapping("getTubePersons/{tubeId}/{managerId}/{currentPage}/{size}")
     public Result getTubePersons(@PathVariable String tubeId,
@@ -158,33 +124,22 @@ public class ApiDocumentController {
                                  @PathVariable int currentPage,
                                  @PathVariable int size){
         LambdaQueryWrapper<CorrespondTP> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        Account account = accountService.getById(managerId);
         lambdaQueryWrapper.eq(CorrespondTP::getTubeId,tubeId);
         List<CorrespondTP> list = correspondTPService.list(lambdaQueryWrapper);
         List<String> personIds = list.stream().map(i -> i.getPersonId()).collect(Collectors.toList());
         if (personIds.size() == 0) {
             return Result.fail("无数据");
         }
-        List<Person> peoples = personService.listByIds(personIds).stream().filter(i -> i.getReceiveStatus().booleanValue() == true && i.getManagerId() == managerId).collect(Collectors.toList());
-        if (peoples.size() == 0) {
-            return Result.fail("无数据");
+        if (account.getRole() == 1) {
+            List<Person> peoples = personService.listByIds(personIds);
+            return page(currentPage, size, peoples);
         }
-        Page<Person> page = new Page<>(currentPage,size);
-        int count = peoples.size();
-        List<Person> pageList = new ArrayList<>();
-//计算当前页第一条数据的下标
-        int currId = currentPage>1 ? (currentPage-1)*size:0;
-        for (int i=0; i<size && i<count - currId;i++){
-            pageList.add(peoples.get(currId+i));
-        }
-        page.setSize(size);
-        page.setCurrent(currentPage);
-        page.setTotal(count);
-//计算分页总页数
-        page.setPages(count %10 == 0 ? count/10 :count/10+1);
-        page.setRecords(pageList);
-        //DO NOT CHANGE IT AGAIN
-        return Result.ok(page);
+        List<Person> peoples = personService.listByIds(personIds).stream().filter(i -> i.getReceiveStatus().booleanValue() == true && i.getDistrict().equals(account.getManageDistrict())).collect(Collectors.toList());
+        return page(currentPage, size, peoples);
     }
+
+
 
     /**
      * 获取待完善信息数量
@@ -282,5 +237,27 @@ public class ApiDocumentController {
             }
         }
         return Result.ok(disputeNum);
+    }
+
+    private Result<? extends Serializable> page(int currentPage, int size, List<Person> peoples) {
+        if (peoples.size() == 0) {
+            return Result.fail("无数据");
+        }
+        Page<Person> page = new Page<>(currentPage, size);
+        int count = peoples.size();
+        List<Person> pageList = new ArrayList<>();
+//计算当前页第一条数据的下标
+        int currId = currentPage >1 ? (currentPage -1)* size :0;
+        for (int i = 0; i< size && i<count - currId; i++){
+            pageList.add(peoples.get(currId+i));
+        }
+        page.setSize(size);
+        page.setCurrent(currentPage);
+        page.setTotal(count);
+//计算分页总页数
+        page.setPages(count %10 == 0 ? count/10 :count/10+1);
+        page.setRecords(pageList);
+        //DO NOT CHANGE IT AGAIN
+        return Result.ok(page);
     }
 }
