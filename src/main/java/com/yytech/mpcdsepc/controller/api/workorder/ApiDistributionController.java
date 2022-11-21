@@ -60,13 +60,14 @@ public class ApiDistributionController {
         BeanUtils.copyProperties(p,personVo);
         personVo.setKey(key);
         personVo.setExpireTime(30L);
-        redisTemplate.opsForValue().set(key,personVo,30, TimeUnit.MINUTES);
-        redisTemplate.opsForList().leftPush(json.get("toManagerId"),key);
-        redisTemplate.getExpire(key, TimeUnit.MINUTES);
+        personVo.setReceiveStatus(false);
 //        p.setManagerId(Integer.parseInt(json.get("ManagerId")));        // 注意: 这里的ManagerId应当是派发一方的Id
         UpdateWrapper<Person> wrapper = new UpdateWrapper<>();
         wrapper.eq("PersonID",json.get("PersonId")).set("receiveStatus","0");
-        personMapper.update(p,wrapper);
+        int update = personMapper.update(p, wrapper);
+        redisTemplate.opsForValue().set(key,personVo,30, TimeUnit.MINUTES);
+        redisTemplate.opsForList().leftPush(json.get("toManagerId"),key);
+        redisTemplate.getExpire(key, TimeUnit.MINUTES);
         return Result.ok("Order send done");
     }
 
