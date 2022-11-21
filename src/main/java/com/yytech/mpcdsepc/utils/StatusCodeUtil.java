@@ -17,6 +17,7 @@ public class StatusCodeUtil {
     public static int UploadError = 20051;
     public static int LoginError = 20011;
     public static int UnknownError = 500;
+    public static int DuplicateKey = 21000;
 
 //    public static Map<String, String> statusCode = new HashMap<String, String>() {
 //        {

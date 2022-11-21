@@ -36,6 +36,7 @@ public class ApiDocGenController {
 //        序号	区县	街道	采样点	采样类型	混检Ct值	混检检出时间	风险元素	单检结果	Ct值	单检阳性时间
 
         titleRow.createCell(0).setCellValue("序号");
+        System.out.println("= - =" + titleRow.getCell(0).getStringCellValue());
         //第二列
         titleRow.createCell(1).setCellValue("区县");
         //第三列
@@ -85,7 +86,8 @@ public class ApiDocGenController {
             //文件名编码格式
             fileName = URLEncoder.encode(fileName, "UTF-8");
             //设置ContentType请求信息格式
-            response.setContentType("application/pdf");
+            response.setContentType("application/pdf;charset=utf-8");
+
             //设置标头
             response.setHeader("Content-disposition", "attachment;filename=" + fileName);
             fileOS = response.getOutputStream();

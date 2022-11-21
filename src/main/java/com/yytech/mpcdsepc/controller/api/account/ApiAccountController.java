@@ -14,11 +14,15 @@ import com.yytech.mpcdsepc.result.Result;
 import com.yytech.mpcdsepc.service.impl.AccountServiceImpl;
 import com.yytech.mpcdsepc.utils.StatusCodeUtil;
 import com.yytech.mpcdsepc.utils.TencentMsgUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Lettle
@@ -32,6 +36,8 @@ public class ApiAccountController {
     @Resource
     private AccountServiceImpl accountService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
     @PostMapping("login")
     public Result login(@RequestBody Map<String, String> map) {
         LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -95,6 +101,14 @@ public class ApiAccountController {
         LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Account::getRole,role);
         List<Account> list = accountService.list(lambdaQueryWrapper);
+        Set onlineList = redisTemplate.opsForSet().members("onlineList");
+        list.stream().forEach(i->{
+            onlineList.stream().forEach(j-> {
+                if (i.getUserName().equals(j)) {
+                    i.setIsOnline(1);
+                }
+            });
+        });
         if (list.size() == 0) {
             return Result.fail("无数据");
         }

@@ -6,8 +6,12 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.yytech.mpcdsepc.entity.Message;
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.service.PersonService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,14 +23,18 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
 @Slf4j
+@Data
 @ServerEndpoint("/websocket/{id}")
 public class TestWebSocket {
 
     private static PersonService personService;
 
+    private static RedisTemplate redisTemplate;
+
     @Autowired
-    public void setPersonService(PersonService personService){
+    public void setPersonService(PersonService personService,RedisTemplate redisTemplate){
         TestWebSocket.personService = personService;
+        TestWebSocket.redisTemplate = redisTemplate;
     }
 
     private Session session;
@@ -34,12 +42,12 @@ public class TestWebSocket {
     private String userId;
 
     //存着所有的websocket会话，这个目前的作用除了用来发全部消息和看在线人数以外感觉没用
-    private static CopyOnWriteArraySet<TestWebSocket> webSockets =new CopyOnWriteArraySet<>();
+    private static   CopyOnWriteArraySet<TestWebSocket> webSockets =new CopyOnWriteArraySet<>();
 
     //存着每个用户以及其对应的会话，这个可以用来发送点对点消息
-    private static ConcurrentHashMap<String,Session> sessionPool = new ConcurrentHashMap<String,Session>();
+    private static   ConcurrentHashMap<String,Session> sessionPool = new ConcurrentHashMap<String,Session>();
 
-    private static ConcurrentHashMap<String,String> editDocumentMap = new ConcurrentHashMap<String,String>();
+    private static   ConcurrentHashMap<String,String> editDocumentMap = new ConcurrentHashMap<String,String>();
 
     @OnOpen
     public void onOpen(Session session, @PathParam(value="id")String userId) {
@@ -54,6 +62,9 @@ public class TestWebSocket {
             webSockets.add(this);
             //把加入的用户ID以及对应对话加入Map
             sessionPool.put(userId, session);
+            //将在线人数放入redis
+            redisTemplate.opsForSet().add("onlineList",userId);
+
             this.sendAllMessage(Message.OnlineCount(webSockets.size()));
             System.out.println("【websocket消息】有新的连接，总数为:" + webSockets.size());
             log.info("【websocket消息】有新的连接，总数为:"+sessionPool);
@@ -129,6 +140,7 @@ public class TestWebSocket {
         System.out.println(sessionPool);
         System.out.println(webSockets);
         if (userId != null && sessionPool.containsKey(userId)) {
+            redisTemplate.opsForSet().remove("onlineList",userId);
             sessionPool.remove(userId);
         }
         if(editDocumentMap.containsKey(userId)){
@@ -136,12 +148,8 @@ public class TestWebSocket {
             lambdaUpdateWrapper.set(Person::getIsLocked,"0").eq(Person::getID,editDocumentMap.get(userId));
             boolean update = personService.update(lambdaUpdateWrapper);
             editDocumentMap.remove(userId);
-            System.out.println(update);
         }
-        System.out.println(userId);
-        System.out.println(sessionPool);
-        System.out.println(editDocumentMap);
-        log.info("有老6离开了，当前人数:" + webSockets.size());
+        log.info("有老6离开了，当前在线列表:" + sessionPool);
     }
 
     public void sendAllMessage(String message) {

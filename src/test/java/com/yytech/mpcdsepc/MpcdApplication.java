@@ -8,6 +8,7 @@ import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.service.AccountService;
 import com.yytech.mpcdsepc.service.PersonService;
 import com.yytech.mpcdsepc.utils.TencentMsgUtils;
+import com.yytech.mpcdsepc.websocket.TestWebSocket;
 import org.apache.ibatis.javassist.ClassPool;
 import org.apache.ibatis.javassist.CtClass;
 import org.apache.ibatis.javassist.CtMethod;
@@ -29,13 +30,10 @@ import java.util.concurrent.TimeUnit;
     private PersonService personService;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private TestWebSocket testWebSocket;
 
     @Test
     void name() throws TencentCloudSDKException {
-//       redisTemplate.opsForValue().set("1","1",30, TimeUnit.MINUTES);
-//       Long expire = redisTemplate.getExpire("1", TimeUnit.MINUTES);
-//       System.out.println(redisTemplate.opsForValue().get(38de9));
 
     }
 }
