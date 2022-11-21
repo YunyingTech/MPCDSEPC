@@ -77,7 +77,6 @@ public class TestWebSocket {
     public void onMessage(String message) {
         JSONObject jsonObject = JSON.parseObject(message);
         log.info("【websocket消息】收到客户端消息:"+message);
-        System.out.println(jsonObject.get("operator").toString());
         if("edit".equals(jsonObject.get("type").toString())){
             if (editDocumentMap.contains(jsonObject.get("personId").toString())) {
                 this.sendOneMessage(jsonObject.get("operator").toString(), Message.build("NoPermiited",null));

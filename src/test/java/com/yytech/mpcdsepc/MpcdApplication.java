@@ -30,10 +30,10 @@ import java.util.concurrent.TimeUnit;
     private PersonService personService;
 
     @Autowired
-    private TestWebSocket testWebSocket;
+    private RedisTemplate redisTemplate;
 
     @Test
     void name() throws TencentCloudSDKException {
-
+       System.out.println(redisTemplate.getExpire("09045bsa"));
     }
 }

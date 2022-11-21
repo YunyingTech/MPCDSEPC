@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yytech.mpcdsepc.entity.*;
 import com.yytech.mpcdsepc.result.Result;
@@ -42,6 +43,10 @@ public class ApiDocumentController {
     private EditSampleHistoryService editSampleHistoryService;
 
 
+    @GetMapping("getAlltubes")
+    public Result getAllTubes(){
+        return Result.ok(tubeService.list());
+    }
 
     /**
      * 删除混管信息
@@ -132,7 +137,11 @@ public class ApiDocumentController {
             return Result.fail("无数据");
         }
         if (account.getRole() == 1) {
-            List<Person> peoples = personService.listByIds(personIds);
+            List<Person> peoples = personService.listByIds(personIds).stream().filter(i -> i.getReceiveStatus().booleanValue() == true).collect(Collectors.toList());
+            return page(currentPage, size, peoples);
+        }
+        if (account.getRole() == 3) {
+            List<Person> peoples = personService.listByIds(personIds).stream().filter(i -> i.getReceiveStatus().booleanValue() == true && i.getManagerId() ==  managerId).collect(Collectors.toList());
             return page(currentPage, size, peoples);
         }
         List<Person> peoples = personService.listByIds(personIds).stream().filter(i -> i.getReceiveStatus().booleanValue() == true && i.getDistrict().equals(account.getManageDistrict())).collect(Collectors.toList());

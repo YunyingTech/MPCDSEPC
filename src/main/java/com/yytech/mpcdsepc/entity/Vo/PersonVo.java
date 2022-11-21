@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PersonVo extends Person {
-    private String key;
     private Long expireTime;
 }

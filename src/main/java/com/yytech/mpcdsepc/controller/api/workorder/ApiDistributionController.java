@@ -5,6 +5,7 @@
  **/
 package com.yytech.mpcdsepc.controller.api.workorder;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yytech.mpcdsepc.entity.Account;
 import com.yytech.mpcdsepc.entity.Person;
@@ -12,6 +13,7 @@ import com.yytech.mpcdsepc.entity.Vo.PersonVo;
 import com.yytech.mpcdsepc.mapper.AccountMapper;
 import com.yytech.mpcdsepc.mapper.PersonMapper;
 import com.yytech.mpcdsepc.result.Result;
+import com.yytech.mpcdsepc.service.PersonService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,6 +31,9 @@ public class ApiDistributionController {
     private PersonMapper personMapper;
     @Autowired
     private AccountMapper accountMapper;
+
+    @Autowired
+    private PersonService personService;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -54,20 +59,16 @@ public class ApiDistributionController {
         if(self.getRole() > to.getRole()) {
             return Result.fail("禁止越级发送");
         }
-        String key = UUID.randomUUID().toString().substring(0,6);
         PersonVo personVo = new PersonVo();
-
         BeanUtils.copyProperties(p,personVo);
-        personVo.setKey(key);
         personVo.setExpireTime(30L);
         personVo.setReceiveStatus(false);
 //        p.setManagerId(Integer.parseInt(json.get("ManagerId")));        // 注意: 这里的ManagerId应当是派发一方的Id
         UpdateWrapper<Person> wrapper = new UpdateWrapper<>();
         wrapper.eq("PersonID",json.get("PersonId")).set("receiveStatus","0");
         int update = personMapper.update(p, wrapper);
-        redisTemplate.opsForValue().set(key,personVo,30, TimeUnit.MINUTES);
-        redisTemplate.opsForList().leftPush(json.get("toManagerId"),key);
-        redisTemplate.getExpire(key, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(json.get("PersonId"),personVo,30, TimeUnit.SECONDS);
+        redisTemplate.opsForList().leftPush(json.get("toManagerId"),json.get("PersonId"));
         return Result.ok("Order send done");
     }
 
@@ -78,7 +79,7 @@ public class ApiDistributionController {
     public Result reject(@RequestBody Map<String, String> json) {
         Person p = personMapper.selectById(json.get("PersonId"));
         p.setReceiveStatus(true);
-        redisTemplate.opsForList().remove(json.get("ManagerId"),0,json.get("Key"));
+        redisTemplate.opsForList().remove(json.get("ManagerId"),0,json.get("PersonId"));
         Boolean flag = redisTemplate.delete(json.get("Key"));
         if (!flag.booleanValue()) {
             return Result.fail("派单已过期");
@@ -95,8 +96,8 @@ public class ApiDistributionController {
     public Result accept(@RequestBody Map<String, String> json) {
         Person p = personMapper.selectById(json.get("PersonId"));
         p.setReceiveStatus(true);
-        redisTemplate.opsForList().remove(json.get("ManagerId"),0,json.get("Key"));
-        Boolean flag = redisTemplate.delete(json.get("Key"));
+        redisTemplate.opsForList().remove(json.get("ManagerId"),0,json.get("PersonId"));
+        Boolean flag = redisTemplate.delete(json.get("PersonId"));
         if (!flag.booleanValue()) {
             return Result.fail("派单已过期");
         }
@@ -118,12 +119,15 @@ public class ApiDistributionController {
             PersonVo personVo = (PersonVo) redisTemplate.opsForValue().get(i);
             if (personVo == null) {
                 redisTemplate.opsForList().remove(managerId,0,i);
+                LambdaUpdateWrapper<Person> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                lambdaUpdateWrapper.eq(Person::getID,i).set(Person::getReceiveStatus,true);
+                personService.update(lambdaUpdateWrapper);
                 return null;
             }
-            Long expire = redisTemplate.getExpire(personVo.getKey(), TimeUnit.MINUTES);
+            Long expire = redisTemplate.getExpire(i, TimeUnit.MINUTES);
             personVo.setExpireTime(expire);
             return personVo;
-        }).collect(Collectors.toList());
+        }).filter(i->i!=null).collect(Collectors.toList());
         return Result.ok(collect);
     }
 
