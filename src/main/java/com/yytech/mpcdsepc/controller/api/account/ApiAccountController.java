@@ -115,6 +115,17 @@ public class ApiAccountController {
         return Result.ok(list);
     }
 
+    @GetMapping("queryOnlineAccountByRole/{role}")
+    public Result queryOnlineAccountByRole(@PathVariable int role){
+        LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.ge(Account::getRole,role);
+        List<Account> list = accountService.list(lambdaQueryWrapper);
+        if (list.size() == 0) {
+            return Result.fail("无数据");
+        }
+        return Result.ok(list);
+    }
+
     @PostMapping("sendMsg/{PhoneNum}/{name}")
     public Result sendMsg(@PathVariable String PhoneNum,
                           @PathVariable String name) throws TencentCloudSDKException {

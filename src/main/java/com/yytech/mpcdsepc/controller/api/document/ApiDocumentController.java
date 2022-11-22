@@ -53,11 +53,20 @@ public class ApiDocumentController {
      * @param id 混管ID
      * @return
      */
-    @RequestMapping(value = "/delTube",method = RequestMethod.POST,produces = "application/json")
+    @DeleteMapping("delTube")
     public Result deleteTube(@RequestParam("tubeId") int id){
         boolean flag = tubeService.removeById(id);
         if (!flag) {
             return Result.fail();
+        }
+        return Result.ok();
+    }
+
+    @PostMapping("addTube")
+    public Result addTube(@RequestBody Tube tube){
+        boolean flag = tubeService.save(tube);
+        if (!flag) {
+            return Result.fail("保存失败");
         }
         return Result.ok();
     }
@@ -67,19 +76,13 @@ public class ApiDocumentController {
      * @param id 混管ID
      * @return
      */
-    @RequestMapping(value = "/getTubeData",method = RequestMethod.POST,produces = "application/json")
+   @GetMapping("getTubeData")
     public Result getTubeData(@RequestParam("tubeId") int id){
         Tube tube = tubeService.getById(id);
-        Map<String,Object> tubeData = new HashMap<>();
-        List<Map<String,Object>> tubes = new ArrayList<>();
-        if(tube != null){
-            tubes.add(tubeData);
-            return Result.ok(tubes);
-        }
-        else{
-            tubes.add(tubeData);
-            return Result.ok(tubes);
-        }
+       if (tube == null) {
+           return Result.fail("无数据");
+       }
+       return Result.ok(tube);
     }
 
     /**
@@ -87,7 +90,7 @@ public class ApiDocumentController {
      * @param tube
      * @return
      */
-    @PostMapping("/updateTube")
+    @PutMapping("/updateTube")
     public Result updateTube(@RequestBody Tube tube, @RequestBody PositiveSample positiveSample,@RequestBody Integer editSampleId,@RequestBody Integer managerId) {
         // 编辑操作日志记录 传入参数编辑编号 编辑者id tube positiveSample（可为空）
         SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

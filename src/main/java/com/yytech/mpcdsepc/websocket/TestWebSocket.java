@@ -67,6 +67,7 @@ public class TestWebSocket {
             redisTemplate.opsForSet().add("onlineList",userId);
 
             this.sendAllMessage(Message.OnlineCount(webSockets.size()));
+            this.sendAllMessage(Message.build("onlineList",JSON.toJSONString(sessionPool.keySet())));
             System.out.println("【websocket消息】有新的连接，总数为:" + webSockets.size());
             log.info("【websocket消息】有新的连接，总数为:"+sessionPool);
         } catch (Exception e) {
@@ -147,6 +148,7 @@ public class TestWebSocket {
         }
 
         this.sendAllMessage(Message.OnlineCount(webSockets.size()));
+        this.sendAllMessage(Message.build("onlineList",sessionPool.keySet().toString()));
         System.out.println(sessionPool);
         System.out.println(webSockets);
         if (userId != null && sessionPool.containsKey(userId)) {
