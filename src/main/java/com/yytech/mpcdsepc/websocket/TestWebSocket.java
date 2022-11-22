@@ -72,8 +72,8 @@ public class TestWebSocket {
 //            this.sendAllMessage(Message.OnlineCount(webSockets.size()));
             System.out.println("【websocket消息】有新的连接，总数为:" + webSockets.size());
             log.info("【websocket消息】有新的连接，总数为:"+sessionPool);
-            Map<String,String> resMap = new HashMap<>();
-            resMap.put("userIn",userId);
+            Map<String,Object> resMap = new HashMap<>();
+            resMap.put("userIn",sessionPool.keySet().stream().toList());
             resMap.put("onlineCount",String.valueOf(webSockets.size()));
             this.sendAllMessage(Message.build("onlineInfo",resMap));
         } catch (Exception e) {
