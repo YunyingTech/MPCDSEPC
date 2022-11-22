@@ -186,6 +186,22 @@ public class ApiDocumentController {
         return Result.ok(page);
     }
 
+    @GetMapping("getTubesDate")
+    public Result getTubesByDate(){
+      LambdaQueryWrapper<Tube> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+      lambdaQueryWrapper.groupBy(Tube::getCreateTime).select(Tube::getCreateTime);
+        List<Map<String, Object>> maps = tubeService.listMaps(lambdaQueryWrapper);
+        return Result.ok(maps);
+    }
+
+    @GetMapping("getTubesByDate")
+    public Result getTubesByDate(@RequestParam String date){
+        LambdaQueryWrapper<Tube> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Tube::getCreateTime,date);
+        List<Tube> list = tubeService.list(lambdaQueryWrapper);
+        return Result.ok(list);
+    }
+
     /**
      * 获取待完善信息数量
      *
