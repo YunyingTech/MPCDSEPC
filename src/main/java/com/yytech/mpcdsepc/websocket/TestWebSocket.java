@@ -3,6 +3,7 @@ package com.yytech.mpcdsepc.websocket;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import com.yytech.mpcdsepc.entity.Message;
 import com.yytech.mpcdsepc.entity.Person;
 import com.yytech.mpcdsepc.service.PersonService;
@@ -115,9 +116,19 @@ public class TestWebSocket {
             }
             Person p = JSON.parseObject(jsonObject.get("data").toString(), Person.class);
             p.setIsLocked("0");
-            personService.updateById(p);
-            this.sendAllMessage(Message.build("updateDocument",null));
-            return;
+            try {
+                personService.updateById(p);
+            }
+            catch (Exception e){
+                personService.update(lambdaUpdateWrapper);
+                System.out.println("fixed");
+            }
+            finally {
+                this.sendAllMessage(Message.build("updateDocument",null));
+                return;
+            }
+
+
         }
     }
 

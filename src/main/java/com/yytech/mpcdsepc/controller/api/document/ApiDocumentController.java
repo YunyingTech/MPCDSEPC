@@ -121,10 +121,6 @@ public class ApiDocumentController {
 //        return Result.fail("获取试管失败");
 //    }
 
-    @GetMapping("getAlltubes")
-    public Result getAllTubes(){
-        return Result.ok(tubeService.list());
-    }
 
     @GetMapping("getTubePersons/{tubeId}/{managerId}/{currentPage}/{size}")
     public Result getTubePersons(@PathVariable String tubeId,
