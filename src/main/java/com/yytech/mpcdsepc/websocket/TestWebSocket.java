@@ -19,7 +19,9 @@ import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -67,10 +69,13 @@ public class TestWebSocket {
             //将在线人数放入redis
             redisTemplate.opsForSet().add("onlineList",userId);
 
-            this.sendAllMessage(Message.OnlineCount(webSockets.size()));
+//            this.sendAllMessage(Message.OnlineCount(webSockets.size()));
             System.out.println("【websocket消息】有新的连接，总数为:" + webSockets.size());
             log.info("【websocket消息】有新的连接，总数为:"+sessionPool);
-            this.sendAllMessage(Message.build("userIn",userId.toString()));
+            Map<String,String> resMap = new HashMap<>();
+            resMap.put("userIn",userId);
+            resMap.put("onlineCount",String.valueOf(webSockets.size()));
+            this.sendAllMessage(Message.build("onlineInfo",resMap));
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(555);
@@ -148,10 +153,10 @@ public class TestWebSocket {
             webSockets.remove(this);
         }
 
-        this.sendAllMessage(Message.OnlineCount(webSockets.size()));
-        System.out.println(sessionPool);
-        System.out.println(webSockets);
-        this.sendAllMessage(Message.build("userOut",userId.toString()));
+        Map<String,String> resMap = new HashMap<>();
+        resMap.put("userOut",userId);
+        resMap.put("onlineCount",String.valueOf(webSockets.size()));
+        this.sendAllMessage(Message.build("onlineInfo",resMap));
 
         if (userId != null && sessionPool.containsKey(userId)) {
             redisTemplate.opsForSet().remove("onlineList",userId);
@@ -185,7 +190,7 @@ public class TestWebSocket {
             try {
                 log.info("【websocket消息】 单点消息:"+message);
 //                synchronized (session) {//加锁，保证不会同时被执行
-                    session.getAsyncRemote().sendText(message);
+                        session.getAsyncRemote().sendText(message);
 //                }
 
             } catch (Exception e) {
