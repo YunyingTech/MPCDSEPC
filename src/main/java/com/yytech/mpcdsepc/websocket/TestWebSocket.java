@@ -68,9 +68,9 @@ public class TestWebSocket {
             redisTemplate.opsForSet().add("onlineList",userId);
 
             this.sendAllMessage(Message.OnlineCount(webSockets.size()));
-            this.sendAllMessage(Message.build("userIn",userId.toString()));
             System.out.println("【websocket消息】有新的连接，总数为:" + webSockets.size());
             log.info("【websocket消息】有新的连接，总数为:"+sessionPool);
+            this.sendAllMessage(Message.build("userIn",userId.toString()));
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(555);
@@ -149,9 +149,10 @@ public class TestWebSocket {
         }
 
         this.sendAllMessage(Message.OnlineCount(webSockets.size()));
-        this.sendAllMessage(Message.build("userOut",userId.toString()));
         System.out.println(sessionPool);
         System.out.println(webSockets);
+        this.sendAllMessage(Message.build("userOut",userId.toString()));
+
         if (userId != null && sessionPool.containsKey(userId)) {
             redisTemplate.opsForSet().remove("onlineList",userId);
             sessionPool.remove(userId);
@@ -178,12 +179,15 @@ public class TestWebSocket {
         }
     }
 
-    public void sendOneMessage(String userId, String message) {
+    public synchronized void sendOneMessage(String userId, String message) {
         Session session = sessionPool.get(userId);
         if (session != null&&session.isOpen()) {
             try {
                 log.info("【websocket消息】 单点消息:"+message);
-                session.getAsyncRemote().sendText(message);
+//                synchronized (session) {//加锁，保证不会同时被执行
+                    session.getAsyncRemote().sendText(message);
+//                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
