@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -67,7 +68,7 @@ public class TestWebSocket {
             redisTemplate.opsForSet().add("onlineList",userId);
 
             this.sendAllMessage(Message.OnlineCount(webSockets.size()));
-            this.sendAllMessage(Message.build("onlineList",JSON.toJSONString(sessionPool.keySet())));
+            this.sendAllMessage(Message.build("userIn",userId.toString()));
             System.out.println("【websocket消息】有新的连接，总数为:" + webSockets.size());
             log.info("【websocket消息】有新的连接，总数为:"+sessionPool);
         } catch (Exception e) {
@@ -148,7 +149,7 @@ public class TestWebSocket {
         }
 
         this.sendAllMessage(Message.OnlineCount(webSockets.size()));
-        this.sendAllMessage(Message.build("onlineList",sessionPool.keySet().toString()));
+        this.sendAllMessage(Message.build("userOut",userId.toString()));
         System.out.println(sessionPool);
         System.out.println(webSockets);
         if (userId != null && sessionPool.containsKey(userId)) {
