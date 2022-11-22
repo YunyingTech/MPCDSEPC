@@ -121,7 +121,7 @@ public class TestWebSocket {
             }
             catch (Exception e){
                 personService.update(lambdaUpdateWrapper);
-                System.out.println("fixed");
+                this.sendOneMessage(userId,Message.build("wrongData",null));
             }
             finally {
                 this.sendAllMessage(Message.build("updateDocument",null));
