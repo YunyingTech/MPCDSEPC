@@ -5,12 +5,13 @@
  **/
 package com.yytech.mpcdsepc.controller.api.document;
 import com.yytech.mpcdsepc.result.Result;
+import com.yytech.mpcdsepc.service.CorrespondTPService;
+import com.yytech.mpcdsepc.service.PersonService;
 import com.yytech.mpcdsepc.utils.POIUtils;
 import org.apache.commons.io.FileUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -20,6 +21,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/mpcdsepc/api/document")
 public class ApiDocUploadController {
+
+    @Autowired
+    private PersonService personService;
+
+    @Autowired
+    private CorrespondTPService correspondTPService;
 
     @PostMapping("/upload")
     public Object upload(@RequestParam("file") MultipartFile file){
@@ -73,10 +80,14 @@ public class ApiDocUploadController {
 
         return "ok";
     }
-    @PostMapping("readExcel")
-    public Result readExcel(@RequestParam("file") MultipartFile file) throws IOException {
-        List<String[]> strings = POIUtils.readExcel(file);
-        return Result.ok(strings);
+    @PostMapping("readExcel/{tubeId}/{managerId}")
+    @Transactional(rollbackFor = Exception.class)
+    public Result readExcel(@RequestParam("file") MultipartFile file, @PathVariable String tubeId,@PathVariable int managerId) throws IOException {
+        boolean flag = POIUtils.readExcel(file,tubeId,managerId ,personService,correspondTPService);
+        if (!flag) {
+            return Result.fail();
+        }
+        return Result.ok();
     }
 
 }

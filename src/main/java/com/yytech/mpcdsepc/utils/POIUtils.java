@@ -1,11 +1,17 @@
 package com.yytech.mpcdsepc.utils;
 
+import com.yytech.mpcdsepc.entity.CorrespondTP;
+import com.yytech.mpcdsepc.entity.Person;
+import com.yytech.mpcdsepc.service.CorrespondTPService;
+import com.yytech.mpcdsepc.service.PersonService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -15,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public class POIUtils {
+
 
     private final static String xls = "xls";
     private final static String xlsx = "xlsx";
@@ -45,16 +52,17 @@ public class POIUtils {
         return fileName;
     }
 
-    public static List<String[]> readExcel(MultipartFile file) throws IOException {
+    public static boolean readExcel(MultipartFile file, String tubeId,int managerId,PersonService personService, CorrespondTPService correspondTPService) throws IOException {
         //检查文件
         int res = checkFile(file);
         if (res != 200) {
-            return null;
+            return false;
         }
         //获得Workbook工作薄对象
         Workbook workbook = getWorkBook(file);
         //创建返回对象，把每行中的值作为一个数组，所有行作为一个集合返回
-        List<String[]> list = new ArrayList<>();
+        List<Person> personsList = new ArrayList<>();
+        List<CorrespondTP> correspondTPList = new ArrayList<>();
         if(workbook != null){
             for(int sheetNum = 0;sheetNum < workbook.getNumberOfSheets();sheetNum++){
                 //获得当前sheet工作表
@@ -67,7 +75,7 @@ public class POIUtils {
                 //获得当前sheet的结束行
                 int lastRowNum = sheet.getLastRowNum();
                 //循环除了第一行的所有行
-                for(int rowNum = firstRowNum;rowNum <= lastRowNum;rowNum++){
+                for(int rowNum = firstRowNum + 1;rowNum <= lastRowNum;rowNum++){
                     //获得当前行
                     Row row = sheet.getRow(rowNum);
                     if(row == null){
@@ -78,17 +86,38 @@ public class POIUtils {
                     //获得当前行的列数
                     int lastCellNum = row.getPhysicalNumberOfCells();
                     String[] cells = new String[row.getPhysicalNumberOfCells()];
+                    Person person = new Person();
+                    CorrespondTP correspondTP = new CorrespondTP();
                     //循环当前行
                     for(int cellNum = firstCellNum; cellNum < lastCellNum;cellNum++){
                         Cell cell = row.getCell(cellNum);
                         cells[cellNum] = getCellValue(cell);
                     }
-                    list.add(cells);
+                    person.setID(cells[0]);
+                    person.setName(cells[1]);
+                    person.setPhone(cells[2]);
+                    person.setDistrict(cells[3]);
+                    person.setDetailedAddress(cells[4]);
+                    person.setComeFrom(cells[5]);
+                    person.setHighRiskArea(cells[5].equals("1")?true:false);
+                    person.setVaccine(cells[6].equals("1")?true:false);
+                    person.setSamplingPoint(cells[7]);
+                    person.setSamplingTime(cells[8]);
+                    person.setManagerId(managerId);
+                    correspondTP.setTubeId(tubeId);
+                    correspondTP.setPersonId(cells[0]);
+                    correspondTPList.add(correspondTP);
+                    personsList.add(person);
                 }
             }
             workbook.close();
+            System.out.println(personsList);
+            boolean flag1 = personService.saveBatch(personsList);
+            boolean flag2 = correspondTPService.saveBatch(correspondTPList);
+            return flag1 && flag2;
+//            return true;
         }
-        return list;
+        return false;
     }
     public static int checkFile(MultipartFile file) {
         //判断文件是否存在
