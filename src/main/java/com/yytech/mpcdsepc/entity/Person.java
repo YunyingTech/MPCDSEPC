@@ -41,5 +41,6 @@ public class Person {
     @TableField(fill = FieldFill.INSERT)
     private Date deliverTime;
     private int backFrequency;
+    private int statusCode;
 }
 
