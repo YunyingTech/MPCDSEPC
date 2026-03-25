@@ -192,6 +192,7 @@ mybatis:
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+Our contact: wrenty1985@gmail.com
 
 ## License
 
